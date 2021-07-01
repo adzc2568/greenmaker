@@ -1,0 +1,3971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Document</title>
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script>
+        // .qcss : delay後添加css
+        // ex : $('.an_element').delay(750).qcss({ backgroundColor: 'skyblue' }).delay(750).qcss({ backgroundColor: 'springgreen' })
+        $.fn.extend({
+            qcss: function (css) {
+                return $(this).queue(function (next) {
+                    $(this).css(css);
+                    next();
+                });
+            }
+        });
+
+        //監聽div大小變化
+        (function ($, h, c) {
+            var a = $([]),
+                e = $.resize = $.extend($.resize, {}),
+                i,
+                k = "setTimeout",
+                j = "resize",
+                d = j + "-special-event",
+                b = "delay",
+                f = "throttleWindow";
+            e[b] = 250;
+            e[f] = true;
+            $.event.special[j] = {
+                setup: function () {
+                    if (!e[f] && this[k]) {
+                        return false;
+                    }
+                    var l = $(this);
+                    a = a.add(l);
+                    $.data(this, d, {
+                        w: l.width(),
+                        h: l.height()
+                    });
+                    if (a.length === 1) {
+                        g();
+                    }
+                },
+                teardown: function () {
+                    if (!e[f] && this[k]) {
+                        return false;
+                    }
+                    var l = $(this);
+                    a = a.not(l);
+                    l.removeData(d);
+                    if (!a.length) {
+                        clearTimeout(i);
+                    }
+                },
+                add: function (l) {
+                    if (!e[f] && this[k]) {
+                        return false;
+                    }
+                    var n;
+
+                    function m(s, o, p) {
+                        var q = $(this),
+                            r = $.data(this, d);
+                        r.w = o !== c ? o : q.width();
+                        r.h = p !== c ? p : q.height();
+                        n.apply(this, arguments);
+                    }
+                    if ($.isFunction(l)) {
+                        n = l;
+                        return m;
+                    } else {
+                        n = l.handler;
+                        l.handler = m;
+                    }
+                }
+            };
+
+            function g() {
+                i = h[k](function () {
+                        a.each(function () {
+                            var n = $(this),
+                                m = n.width(),
+                                l = n.height(),
+                                o = $.data(this, d);
+                            if (m !== o.w || l !== o.h) {
+                                n.trigger(j, [o.w = m, o.h = l]);
+                            }
+                        });
+                        g();
+                    },
+                    e[b]);
+            }
+        })(jQuery, this);
+
+
+         /*
+     * Replace all SVG images with inline SVG
+     */
+        jQuery('img.svg').each(function(){
+            var $img = jQuery(this);
+            var imgID = $img.attr('id');
+            var imgClass = $img.attr('class');
+            var imgURL = $img.attr('src');
+
+            jQuery.get(imgURL, function(data) {
+                // Get the SVG tag, ignore the rest
+                var $svg = jQuery(data).find('svg');
+
+                // Add replaced image's ID to the new SVG
+                if(typeof imgID !== 'undefined') {
+                    $svg = $svg.attr('id', imgID);
+                }
+                // Add replaced image's classes to the new SVG
+                if(typeof imgClass !== 'undefined') {
+                    $svg = $svg.attr('class', imgClass+' replaced-svg');
+                }
+
+                // Remove any invalid XML tags as per http://validator.w3.org
+                $svg = $svg.removeAttr('xmlns:a');
+
+                // Replace image with new SVG
+                $img.replaceWith($svg);
+
+            }, 'xml');
+
+        });
+
+        //scrollAnimation
+        var previousScroll = 0; //header change
+
+        function scrollAni() {
+            console.log();
+            console.log($(window).height());
+            var scrollTop = document.documentElement.scrollTop;
+            if (scrollTop > 1) {
+                if (scrollTop > previousScroll) {
+                    $(".run_top").css({
+                        "transform": "translateY(40px)",
+                        "filter": "opacity(0)"
+                    });
+                } else {
+                    $(".run_top").css({
+                        "transform": "translateY(0)",
+                        "filter": "opacity(1)"
+                    });
+                }
+                if (scrollTop > (600 * ($("#home").height() / 1000))) {
+                    $(".content").css({
+                        "position": "relative",
+                        "margin-top": 90 * (contentMarginTop / 500)
+                    });
+                    $(".spacer").css("display", "none");
+                    if (scrollTop > 920) {
+                        $("#header").css("visibility", "visible")
+                        $(".header_container").css("background", "#FAFAF1");
+                        $("#header .list").css("transform", "scaleY(1)");
+                        $("#header .list a").css("color", "#2D2D2D");
+                        if (scrollTop > 1220) {
+                            if (scrollTop > previousScroll) {
+                                $("#header").css({
+                                    "transform": "translateY(-60px)"
+                                });
+                            } else {
+                                $("#header").css({
+                                    "transform": "translateY(0px)"
+                                });
+                            }
+                            if (scrollTop > $(".img_wall_container").offset().top-200) {
+                                $("#LANDSCAPE .section02 .ul_img_wall_t").css({ "filter": "opacity(0)"});
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (scrollTop <= 920) {
+                $("#header").css("visibility", "hidden")
+                $(".header_container").css("background", "transparent");
+                $("#header .list").css("transform", "scaleY(0)");
+                $("#header .list a").css("color", "#FAFAF1");
+                if (scrollTop <= (600 * ($("#home").height() / 1000))) {
+                    $(".content").css({
+                        "position": "fixed",
+                        "margin-top": contentMarginTop
+                    });
+                    $(".spacer").css("display", "block");
+                    if (scrollTop <= 1) {
+                        $(".run_top").css({
+                            "transform": "translateY(40px)",
+                            "filter": "opacity(0)"
+                        });
+                    }
+                }
+            }
+            previousScroll = scrollTop;
+        } //scrollAni over
+
+        function scrollAni576() {
+            var scrollTop = document.documentElement.scrollTop;
+            if (scrollTop > 1) {
+                if (scrollTop > previousScroll) {
+                    $(".run_top").css({
+                        "transform": "translateY(40px)",
+                        "filter": "opacity(0)"
+                    });
+                } else {
+                    $(".run_top").css({
+                        "transform": "translateY(0)",
+                        "filter": "opacity(1)"
+                    });
+                }
+                if (scrollTop > (600 * ($("#home").height() / 1000))) {
+                    $(".content").css({
+                        "position": "relative",
+                        "margin-top": 30 * (contentMarginTop / 500)
+                    });
+                    $(".spacer").css("display", "none");
+                    if (scrollTop > $(".img_wall_container").offset().top-100) {
+                                $("#LANDSCAPE .section02 .ul_img_wall_t").css({ "filter": "opacity(0)"});
+                            }
+
+                }
+            }
+
+
+
+            if (scrollTop <= (600 * ($("#home").height() / 1000))) {
+                $(".content").css({
+                    "position": "fixed",
+                    "margin-top": contentMarginTop
+                });
+                $(".spacer").css("display", "block");
+                if (scrollTop <= 1) {
+                    $(".run_top").css({
+                        "transform": "translateY(40px)",
+                        "filter": "opacity(0)"
+                    });
+                }
+            }
+            previousScroll = scrollTop;
+        } //scrollAni over
+
+        function headerCss() {
+            $("#header").css("visibility", "hidden")
+            $(".header_container").css("background", "transparent");
+            $("#header .list").css("transform", "scaleY(0)");
+            $("#header .list a").css("color", "#FAFAF1");
+        }
+
+        function headerCss576() {
+            $("#header").css("visibility", "visible")
+            $("#header").css("transform", "translateY(0px)");
+            $(".header_container").css("background", "#FAFAF1");
+            $("#header .list").css("transform", "scaleY(1)");
+            $("#header .list a").css("color", "#2D2D2D");
+        }
+
+        // media query change
+        function WidthChange(mq) {
+            mq.matches ? headerCss() : headerCss576();
+            mq.matches ? window.addEventListener("scroll", scrollAni) : window.addEventListener("scroll",
+                scrollAni576);
+            mq.matches ? window.removeEventListener("scroll", scrollAni576) : window.removeEventListener("scroll",
+                scrollAni);
+
+        }
+
+        $(document).ready(function () {
+            $("#home").css({
+                "filter": "brightness(1.1) opacity(1)"
+            })
+
+            // JavaScript Media Queries 
+            if (matchMedia) {
+                const mq = window.matchMedia("(min-width: 576px)");
+                mq.addListener(WidthChange);
+                WidthChange(mq);
+            }
+
+            // scrolltop test
+            $(window).scroll(function (e) {
+                var scrollTop = document.documentElement.scrollTop;
+                $(".xy").html(scrollTop);
+            });
+
+
+
+            $(".img_wall_container").scroll(function() {
+                if ( $(".img_wall_container").scrollLeft() == 0 ) {
+                    $(".left_arrow_path").css({ "stroke": "#C6C6C6"});
+                } else if ( $(".img_wall_container").scrollLeft() > 0 && $(".img_wall_container").scrollLeft() < (document.querySelector(".img_wall_container").scrollWidth-$(".img_wall_container").width()) ) {
+                    $(".right_arrow_path").css({ "stroke": "#CE9063"});
+                    $(".left_arrow_path").css({ "stroke": "#CE9063"});
+                } else if ( $(".img_wall_container").scrollLeft() == (document.querySelector(".img_wall_container").scrollWidth-$(".img_wall_container").width()) ) {
+                    $(".right_arrow_path").css({ "stroke": "#C6C6C6"});
+                }
+            });
+
+
+            $(".right_arrow").on("click",function() {
+                if( !$(".img_wall_container").is(":animated") ){
+                    $(".img_wall_container").animate({ scrollLeft : ($(".img_wall_container").width()/2)+$(".img_wall_container").scrollLeft() });                 
+                }
+            })
+            $(".left_arrow").on("click", function() {
+                if( !$(".img_wall_container").is(":animated") ){
+
+                    $(".img_wall_container").animate({ scrollLeft : $(".img_wall_container").scrollLeft()-($(".img_wall_container").width()/2) });                       
+                }
+            })
+
+            
+
+
+            // home
+            $("#home").css("height", $(window).height());
+            $(".holder").css("height", $(window).height());
+            $("#barn_front").css({
+                "height": $(window).height(),
+                "left": 310 * ($(window).width() / 1920)
+            });
+            $("#bulb").css({
+                "height": 500 * ($(window).height() / 1000),
+                "width": 180 * ($(window).height() / 1000),
+                "top": -200 * ($(window).height() / 1000)
+            });
+            $("#mint").css({
+                "height": 1300 * ($(window).height() / 1000),
+                "width": 300 * ($(window).height() / 1000),
+                "top": 300 * ($(window).height() / 1000)
+            });
+            $("#mint_head").css({
+                "height": 300 * ($(window).height() / 1000),
+                "width": 300 * ($(window).height() / 1000)
+            });
+            $("#mint_body").css({
+                "height": 1000 * ($(window).height() / 1000),
+                "width": 300 * ($(window).height() / 1000),
+                "top": 300 * ($(window).height() / 1000)
+            });
+            $("#mint_shadow").css({
+                "height": 3150 * ($(window).height() / 1000),
+                "width": 120 * ($(window).height() / 1000),
+                "top": 135 * ($(window).height() / 1000)
+            });
+            $(".content").css("marginTop", 500 * ($("#home").height() / 1000));
+            contentMarginTop = 500 * ($("#home").height() / 1000);
+
+            //landscape
+            $("#LANDSCAPE .section03").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .box_container").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                "width": 1280 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .leftbox").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                "width": 630 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .rightbox").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                "width": 630 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .img01").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                "width": 305 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .img02").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                "width": 305 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .img03").css({
+                "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                "width": 630 * ($("#LANDSCAPE .section03").width() / 1280)
+            });
+            $("#LANDSCAPE .section03 .img01").css({
+                "marginRight": $("#LANDSCAPE .section03 .leftbox").width() - ($(
+                        "#LANDSCAPE .section03 .img01").width() + $("#LANDSCAPE .section03 .img02")
+                    .width())
+            });
+
+            //greening
+            $("#GREENING .section02").css({
+                "height": 740 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .box_container").css({
+                "height": 740 * ($("#GREENING .section02").width() / 1280),
+                "width": 1280 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .leftbox").css({
+                "height": 740 * ($("#GREENING .section02").width() / 1280),
+                "width": 630 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .rightbox").css({
+                "height": 740 * ($("#GREENING .section02").width() / 1280),
+                "width": 630 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .img01").css({
+                "height": 360 * ($("#GREENING .section02").width() / 1280),
+                "width": 630 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .img02").css({
+                "height": 360 * ($("#GREENING .section02").width() / 1280),
+                "width": 630 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .img03").css({
+                "height": 740 * ($("#GREENING .section02").width() / 1280),
+                "width": 630 * ($("#GREENING .section02").width() / 1280)
+            });
+            $("#GREENING .section02 .img01").css({
+                "marginBottom": $("#GREENING .section02 .img03").height() - ($(
+                        "#GREENING .section02 .img01").height() + $("#GREENING .section02 .img02")
+                    .height())
+            });
+
+            $("#GREENING .section03").css({
+                "height": 740 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .box_container").css({
+                "height": 740 * ($("#GREENING .section03").width() / 1280),
+                "width": 1280 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .leftbox").css({
+                "height": 740 * ($("#GREENING .section03").width() / 1280),
+                "width": 630 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .rightbox").css({
+                "height": 740 * ($("#GREENING .section03").width() / 1280),
+                "width": 630 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .img01").css({
+                "height": 360 * ($("#GREENING .section03").width() / 1280),
+                "width": 630 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .img02").css({
+                "height": 360 * ($("#GREENING .section03").width() / 1280),
+                "width": 630 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .img03").css({
+                "height": 740 * ($("#GREENING .section03").width() / 1280),
+                "width": 630 * ($("#GREENING .section03").width() / 1280)
+            });
+            $("#GREENING .section03 .img01").css({
+                "marginBottom": $("#GREENING .section03 .img03").height() - ($(
+                        "#GREENING .section03 .img01").height() + $("#GREENING .section03 .img02")
+                    .height())
+            });
+
+            //service
+            $("#SERVICE .section02 .rightbox").css({
+                "width": $("#SERVICE .section02").width() - 650
+            });
+            $("#SERVICE .section02 .img01").css({
+                "width": $("#SERVICE .section02").width() - 650
+            });
+            $("#SERVICE .section02 .img02").css({
+                "width": $("#SERVICE .section02").width() - 650
+            });
+            if ($(window).width() <= 630) {
+                $("#SERVICE .section02").css({
+                    "height": "100%"
+                })
+                $("#SERVICE .section02 .box_container").css({
+                    "height": "100%"
+                })
+                $("#SERVICE .section02 .leftbox").css({
+                    "position": "static",
+                    "width": "100%",
+                    "height": "100%"
+                });
+                $("#SERVICE .section02 .img03").css({
+                    "height": "100%"
+                })
+                $("#SERVICE .section02 .service_list").css({
+                    "padding": "18px 9px 0 9px"
+                });
+                $("#SERVICE .section02 .article_container").css({
+                    "padding": "0 9px 18px 9px"
+                });
+            } else {
+                $("#SERVICE .section02").css({
+                    "height": "740px"
+                })
+                $("#SERVICE .section02 .box_container").css({
+                    "height": "740px"
+                })
+                $("#SERVICE .section02 .leftbox").css({
+                    "position": "absolute",
+                    "width": "630",
+                    "height": "740px"
+                });
+                $("#SERVICE .section02 .img03").css({
+                    "height": "740px"
+                })
+                $("#SERVICE .section02 .service_list").css({
+                    "padding": "40px 40px 0 40px"
+                });
+                $("#SERVICE .section02 .article_container").css({
+                    "padding": "0 40px 40px 40px"
+                });
+            }
+
+            $(window).resize(function () {
+                // home
+                $("#home").css("height", $(window).height());
+                $(".holder").css("height", $(window).height());
+                $("#barn_front").css({
+                    "height": $(window).height(),
+                    "left": 310 * ($(window).width() / 1920)
+                });
+                $("#bulb").css({
+                    "height": 500 * ($(window).height() / 1000),
+                    "width": 180 * ($(window).height() / 1000),
+                    "top": -200 * ($(window).height() / 1000)
+                });
+                $("#mint").css({
+                    "height": 1300 * ($(window).height() / 1000),
+                    "width": 300 * ($(window).height() / 1000),
+                    "top": 300 * ($(window).height() / 1000)
+                });
+                $("#mint_head").css({
+                    "height": 300 * ($(window).height() / 1000),
+                    "width": 300 * ($(window).height() / 1000)
+                });
+                $("#mint_body").css({
+                    "height": 1000 * ($(window).height() / 1000),
+                    "width": 300 * ($(window).height() / 1000),
+                    "top": 300 * ($(window).height() / 1000)
+                });
+                $("#mint_shadow").css({
+                    "height": 3150 * ($(window).height() / 1000),
+                    "width": 120 * ($(window).height() / 1000),
+                    "top": 135 * ($(window).height() / 1000)
+                });
+                $(".content").css("marginTop", 500 * ($("#home").height() / 1000));
+                contentMarginTop = 500 * ($("#home").height() / 1000);
+
+                //landscape
+                $("#LANDSCAPE .section03").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .box_container").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                    "width": 1280 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .leftbox").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                    "width": 630 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .rightbox").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                    "width": 630 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .img01").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                    "width": 305 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .img02").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                    "width": 305 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .img03").css({
+                    "height": 360 * ($("#LANDSCAPE .section03").width() / 1280),
+                    "width": 630 * ($("#LANDSCAPE .section03").width() / 1280)
+                });
+                $("#LANDSCAPE .section03 .img01").css({
+                    "marginRight": $("#LANDSCAPE .section03 .leftbox").width() - ($(
+                        "#LANDSCAPE .section03 .img01").width() + $(
+                        "#LANDSCAPE .section03 .img02").width())
+                });
+
+                //greening
+                $("#GREENING .section02").css({
+                    "height": 740 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .box_container").css({
+                    "height": 740 * ($("#GREENING .section02").width() / 1280),
+                    "width": 1280 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .leftbox").css({
+                    "height": 740 * ($("#GREENING .section02").width() / 1280),
+                    "width": 630 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .rightbox").css({
+                    "height": 740 * ($("#GREENING .section02").width() / 1280),
+                    "width": 630 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .img01").css({
+                    "height": 360 * ($("#GREENING .section02").width() / 1280),
+                    "width": 630 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .img02").css({
+                    "height": 360 * ($("#GREENING .section02").width() / 1280),
+                    "width": 630 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .img03").css({
+                    "height": 740 * ($("#GREENING .section02").width() / 1280),
+                    "width": 630 * ($("#GREENING .section02").width() / 1280)
+                });
+                $("#GREENING .section02 .img01").css({
+                    "marginBottom": $("#GREENING .section02 .img03").height() - ($(
+                        "#GREENING .section02 .img01").height() + $(
+                        "#GREENING .section02 .img02").height())
+                });
+
+                $("#GREENING .section03").css({
+                    "height": 740 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .box_container").css({
+                    "height": 740 * ($("#GREENING .section03").width() / 1280),
+                    "width": 1280 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .leftbox").css({
+                    "height": 740 * ($("#GREENING .section03").width() / 1280),
+                    "width": 630 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .rightbox").css({
+                    "height": 740 * ($("#GREENING .section03").width() / 1280),
+                    "width": 630 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .img01").css({
+                    "height": 360 * ($("#GREENING .section03").width() / 1280),
+                    "width": 630 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .img02").css({
+                    "height": 360 * ($("#GREENING .section03").width() / 1280),
+                    "width": 630 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .img03").css({
+                    "height": 740 * ($("#GREENING .section03").width() / 1280),
+                    "width": 630 * ($("#GREENING .section03").width() / 1280)
+                });
+                $("#GREENING .section03 .img01").css({
+                    "marginBottom": $("#GREENING .section03 .img03").height() - ($(
+                        "#GREENING .section03 .img01").height() + $(
+                        "#GREENING .section03 .img02").height())
+                });
+
+                //service
+                $("#SERVICE .section02 .rightbox").css({
+                    "width": $("#SERVICE .section02").width() - 650
+                });
+                $("#SERVICE .section02 .img01").css({
+                    "width": $("#SERVICE .section02").width() - 650
+                });
+                $("#SERVICE .section02 .img02").css({
+                    "width": $("#SERVICE .section02").width() - 650
+                });
+                if ($(window).width() <= 630) {
+                    $("#SERVICE .section02").css({
+                        "height": "100%"
+                    })
+                    $("#SERVICE .section02 .box_container").css({
+                        "height": "100%"
+                    })
+                    $("#SERVICE .section02 .leftbox").css({
+                        "position": "static",
+                        "width": "100%",
+                        "height": "100%"
+                    });
+                    $("#SERVICE .section02 .img03").css({
+                        "height": "100%"
+                    })
+                    $("#SERVICE .section02 .service_list").css({
+                        "padding": "18px 9px 0 9px"
+                    });
+                    $("#SERVICE .section02 .article_container").css({
+                        "padding": "0 9px 18px 9px"
+                    });
+                } else {
+                    $("#SERVICE .section02").css({
+                        "height": "740px"
+                    })
+                    $("#SERVICE .section02 .box_container").css({
+                        "height": "740px"
+                    })
+                    $("#SERVICE .section02 .leftbox").css({
+                        "position": "absolute",
+                        "width": "630",
+                        "height": "740px"
+                    });
+                    $("#SERVICE .section02 .img03").css({
+                        "height": "740px"
+                    })
+                    $("#SERVICE .section02 .service_list").css({
+                        "padding": "40px 40px 0 40px"
+                    });
+                    $("#SERVICE .section02 .article_container").css({
+                        "padding": "0 40px 40px 40px"
+                    });
+                }
+            });
+
+
+            //設置 sapcer 準確的初始高度
+            $(".spacer").css("height", $(".content").height() + parseInt($(".content").css("marginTop")));
+            //spacer 高度隨內容高度改變而改變
+            $(".content").resize(function () {
+                $(".spacer").css("height", $(".content").height() + parseInt($(".content").css(
+                    "marginTop")));
+            });
+
+            // back to top
+            $(".run_top").click(function () {
+                $("html, body").animate({
+                    scrollTop: $("body").offset().top
+                });
+            });
+
+        });
+        //##################################################################################################################################
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Lakki+Reddy&display=swap" rel="stylesheet">
+    <style>
+        .xy {
+            width: 100px;
+            height: 100px;
+            background: #EDEDED;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        @font-face {
+            src: url("./fonts/Alegreya-Regular.ttf");
+            font-family: "Alegreya-Regular";
+        }
+
+        @font-face {
+            src: url("./fonts/AlegreyaSansSC-Bold.ttf");
+            font-family: "AlegreyaSansSC-Bold";
+        }
+
+        @font-face {
+            src: url("./fonts/a-box-for.3.ttf");
+            font-family: "a-box-for.3";
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #FAFAF1;
+            overflow-x: hidden;
+
+        }
+
+        .flexbox {
+            display: flex;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2D2D2D;
+        }
+
+        p {
+            font-family: "Alegreya-Regular";
+        }
+
+        h3 {
+            font-size: 24px;
+            font-family: "AlegreyaSansSC-Bold";
+        }
+
+        .title_container {
+            max-width: 1280px;
+            margin: 60px auto 30px auto;
+            padding: 0 9px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 28px;
+            font-family: "AlegreyaSansSC-Bold";
+        }
+
+        .subtitle {
+            font-size: 52px;
+            font-family: "AlegreyaSansSC-Bold";
+        }
+
+        .paragraph {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 9px;
+        }
+
+        .content {
+            position: fixed;
+            top: 0;
+            z-index: 0;
+            width: 100%;
+            margin-top: 500px;
+            border-top: 1px solid transparent;
+            overflow-x: hidden;
+        }
+
+        @media screen and (max-width: 576px) {
+            .subtitle {
+                font-size: 32px;
+            }
+        }
+
+
+        /* #################################################################################################################################### */
+
+        #header {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: all 0.5s;
+        }
+
+        #header .header_container {
+            height: 60px;
+            border-top: 1px solid #FAFAF1;
+            background: #FAFAF1;
+            transition: all 0.5s;
+        }
+
+        #header nav {
+            max-width: 1280px;
+            margin: 0 auto;
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
+
+        #header nav::-webkit-scrollbar {display:none}
+        #header .list {
+            width: 100%;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            transition: all 0.5s;
+        }
+
+        #header .list .item_container01,
+        #header .list .item_container02 {
+            width: 50%;
+        }
+
+        #header .list_item {
+            width: 100%;
+            padding: 12px 0 0 0;
+        }
+/*
+        #header .list_item01 p {
+            color: #ce9063;
+        }*/
+
+        #header .list a {
+            display: block;
+            color: #FAFAF1;
+            font-size: 20px;
+        }
+
+        #header .container {
+            width: 100%;
+            justify-content: center;
+        }
+
+        #header .list_item .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin: 0 8px 0 0;
+        }
+
+        #header .list_item .icon01 {
+            background: url(./img/logo.svg);
+        }
+
+        #header .list_item .icon02 {
+            background: url(./img/landscape.svg);
+        }
+
+        #header .list_item .icon03 {
+            background: url(./img/greening.svg);
+        }
+
+        #header .list_item .icon04 {
+            background: url(./img/service.svg);
+        }
+
+        #header .list_item .icon05 {
+            background: url(./img/blog.svg);
+        }
+
+        #header .list_item .icon06 {
+            background: url(./img/contact.svg);
+        }
+
+        #header .list_item p {
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            margin: 0;
+        }
+
+
+        #header .list .separation_line {
+            width: 1px;
+            height: 50px;
+            margin: 4px 10px 0 10px;
+            border-left: 1px solid #C7C7C7;
+        }
+
+        #header .list .separation_line_none {
+            display: none;
+            width: 1px;
+            height: 50px;
+            margin: 4px 10px 0 10px;
+            border-left: 1px solid #C7C7C7;
+        }
+
+        @media screen and (max-width: 992px) {
+            #header .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #header .list_item {
+                padding: 4px 0 0 0;
+            }
+
+            #header .list_item .icon {
+                margin: 0;
+            }
+
+            #header .list_item p {
+                line-height: 24px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+
+            #header .list a {
+                font-size: 16px;
+                line-height: 22px;
+            }
+
+            #header .list_item {
+                padding: 5px 0 0 0;
+            }
+
+        }
+
+        @media screen and (max-width: 576px) {
+
+            /*#header .list {
+                flex-wrap: wrap;
+            }*/
+
+            #header .list .item_container01,
+            #header .list .item_container02 {
+                width: 100%;
+                height: 30px;
+                flex-wrap: nowrap;
+            }
+
+            #header .list a {
+                font-size: 14px;
+            }
+
+            #header .list_item {
+                padding: 4px 0 0 0;
+            }
+
+            #header .list_item .icon {
+                display: none;
+            }
+
+            #header .list .separation_line {
+                height: 20px;
+                margin: 4px 5px 0 5px;
+            }
+
+            #header .list .separation_line_none {
+                display: block;
+                height: 16px;
+                margin: 4px 5px 0 5px;
+            }
+        }
+
+        /* ###################################################################################################################################### */
+
+        .home_spacer_container {
+            height: 100%;
+        }
+
+        #home {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 1000px;
+            max-width: 1920px;
+            overflow: hidden;
+            background: #000000 url(./img/home_bg.png) center center no-repeat;
+            background-size: cover;
+            filter: brightness(0.1) opacity(1);
+            transition: filter 5s;
+        }
+
+        #home .holder {
+            width: 100%;
+            height: 1000px;
+        }
+
+        #home .logo_container {
+            position: relative;
+            z-index: 30;
+            left: 10%;
+            top: 30px;
+            width: 562px;
+            height: 240px;
+        }
+
+        #home .logo_container a {
+            position: relative;
+            display: block;
+            width: 562px;
+            height: 240px;
+        }
+
+        #home .green {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            font-size: 123px;
+            color: #CC9966;
+            transition: font-size 0.2s
+        }
+
+        #home .logo {
+            position: absolute;
+            top: 123px;
+            left: 0;
+            width: 90px;
+            height: 90px;
+            transition: all 0.2s
+        }
+
+        #home .maker {
+            position: absolute;
+            top: 98px;
+            left: 90px;
+            margin: 0;
+            font-size: 123px;
+            color: #CC9966;
+            transition: font-size 0.2s
+        }
+
+        #home .holder nav {
+            position: relative;
+            z-index: 30;
+            top: 60px;
+            left: 10%;
+            width: 267px;
+            align-items: flex-start;
+        }
+
+        #home .list {
+            margin: 0;
+            padding: 0;
+            font-family: "AlegreyaSansSC-Bold";
+        }
+
+        #home .LANDSCAPE,
+        #home .GREENING,
+        #home .SERVICE,
+        #home .BLOG/*,
+        #home .CONTACT*/ {
+            display: block;
+            width: 100%;
+            color: #FFFFFF;
+            font-size: 48px;
+            transition: font-size 0.2s !important;
+        }
+
+        /*.CONTACT {
+            display: block;
+            width: 100%;
+            color: #FFFFFF;
+            font-size: 48px;
+            cursor: pointer;
+        }
+*/
+        #home .LANDSCAPE,
+        .GREENING,
+        .SERVICE,
+        .BLOG/*,
+        .CONTACT */{
+            transition: color 0.1s;
+        }
+
+        #home .LANDSCAPE:hover {
+            color: #FED759;
+        }
+
+        #home .GREENING:hover {
+            color: #FED759;
+        }
+
+        #home .SERVICE:hover {
+            color: #FED759;
+        }
+
+        #home .BLOG:hover {
+            color: #FED759;
+        }
+
+/*        #home .CONTACT:hover {
+            color: #FED759;
+        }
+*/
+
+        #home #barn_front {
+            height: 100%;
+            left: 310px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        #home #bulb {
+            height: 500px;
+            left: 0;
+            margin: 0 auto;
+            padding: 0;
+            position: absolute;
+            right: 0;
+            top: -200px;
+            -webkit-transform-origin: 50% -100%;
+            -moz-transform-origin: 50% -100%;
+            -ms-transform-origin: 50% -100%;
+            -o-transform-origin: 50% -100%;
+            transform-origin: 50% -100%;
+            -webkit-animation: bulb 4.0s ease-in-out forwards infinite;
+            -moz-animation: bulb 4.0s ease-in-out forwards infinite;
+            -ms-animation: bulb 4.0s ease-in-out forwards infinite;
+            -o-animation: bulb 4.0s ease-in-out forwards infinite;
+            animation: bulb 4.0s ease-in-out forwards infinite;
+            width: 180px;
+        }
+
+        @keyframes bulb {
+            0% {
+                -ms-transform: rotate(3deg);
+                -webkit-transform: rotate(3deg);
+                -moz-transform: rotate(3deg);
+                -o-transform: rotate(3deg);
+                transform: rotate(3deg);
+            }
+
+            50% {
+                -ms-transform: rotate(-3deg);
+                -webkit-transform: rotate(-3deg);
+                -moz-transform: rotate(-3deg);
+                -o-transform: rotate(-3deg);
+                transform: rotate(-3deg);
+            }
+
+            100% {
+                -ms-transform: rotate(3deg);
+                -webkit-transform: rotate(3deg);
+                -moz-transform: rotate(3deg);
+                -o-transform: rotate(3deg);
+                transform: rotate(3deg);
+            }
+        }
+
+
+        #home #mint {
+            height: 1300px;
+            left: 0;
+            margin: 0 auto;
+            padding: 0;
+            position: absolute;
+            right: 0;
+            top: 300px;
+            width: 300px;
+        }
+
+        #home #mint_head {
+            height: 300px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        #home #mint_body {
+            height: 1000px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 300px;
+            width: 100%;
+        }
+
+        #home #mint_shadow {
+            height: 3150px;
+            left: 0;
+            margin: 0 auto;
+            padding: 0;
+            position: absolute;
+            right: 0;
+            top: 135px;
+            -webkit-transform-origin: 50% 0%;
+            -moz-transform-origin: 50% 0%;
+            -ms-transform-origin: 50% 0%;
+            -o-transform-origin: 50% 0%;
+            transform-origin: 50% 0%;
+            -webkit-animation: mint 4.0s ease-in-out forwards infinite;
+            -moz-animation: mint 4.0s ease-in-out forwards infinite;
+            -ms-animation: mint 4.0s ease-in-out forwards infinite;
+            -o-animation: mint 4.0s ease-in-out forwards infinite;
+            animation: mint 4.0s ease-in-out forwards infinite;
+            width: 120px;
+            z-index: 100;
+        }
+
+        @keyframes mint {
+            0% {
+                -ms-transform: rotate(-10deg);
+                -webkit-transform: rotate(-10deg);
+                -moz-transform: rotate(-10deg);
+                -o-transform: rotate(-10deg);
+                transform: rotate(-10deg);
+            }
+
+            50% {
+                -ms-transform: rotate(10deg);
+                -webkit-transform: rotate(10deg);
+                -moz-transform: rotate(10deg);
+                -o-transform: rotate(10deg);
+                transform: rotate(10deg);
+            }
+
+            100% {
+                -ms-transform: rotate(-10deg);
+                -webkit-transform: rotate(-10deg);
+                -moz-transform: rotate(-10deg);
+                -o-transform: rotate(-10deg);
+                transform: rotate(-10deg);
+            }
+        }
+
+        /* ######################################################## */
+
+        @media screen and (max-height: 800px) {
+            #home .logo_container {
+                width: 415px;
+                height: 178px;
+            }
+
+            #home .logo_container a {
+                width: 415px;
+                height: 178px;
+            }
+
+            #home .green {
+                font-size: 90px;
+            }
+
+            #home .logo {
+                top: 90px;
+                width: 70px;
+                height: 70px;
+            }
+
+            #home .maker {
+                top: 75px;
+                left: 70px;
+                font-size: 90px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            #home .logo_container {
+                width: 415px;
+                height: 178px;
+            }
+
+            #home .logo_container a {
+                width: 415px;
+                height: 178px;
+            }
+
+            #home .green {
+                font-size: 90px;
+            }
+
+            #home .logo {
+                top: 90px;
+                width: 70px;
+                height: 70px;
+            }
+
+            #home .maker {
+                top: 75px;
+                left: 70px;
+                font-size: 90px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+
+            #home {
+                margin: 60px 0 0 0;
+            }
+
+            #home .logo_container {
+                width: 329px;
+                height: 135px;
+                left: 9px;
+            }
+
+            #home .logo_container a {
+                width: 329px;
+                height: 135px;
+            }
+
+            #home .green {
+                font-size: 70px;
+            }
+
+            #home .logo {
+                top: 70px;
+                width: 60px;
+                height: 60px;
+            }
+
+            #home .maker {
+                top: 65px;
+                left: 60px;
+                font-size: 70px;
+            }
+
+            #home .holder nav {
+                left: 9px;
+            }
+
+            #home .LANDSCAPE,
+            #home .GREENING,
+            #home .SERVICE,
+            #home .BLOG,
+            #home .CONTACT {
+                font-size: 40px;
+            }
+        }
+
+        @media screen and (max-width: 375px) {
+            #home .logo_container {
+                width: 280px;
+                height: 115px;
+            }
+
+            #home .logo_container a {
+                width: 280px;
+                height: 115px;
+            }
+
+            #home .green {
+                font-size: 60px;
+            }
+
+            #home .logo {
+                top: 60px;
+                width: 50px;
+                height: 50px;
+            }
+
+            #home .maker {
+                top: 55px;
+                left: 55px;
+                font-size: 60px;
+            }
+
+            #home .LANDSCAPE,
+            #home .GREENING,
+            #home .SERVICE,
+            #home .BLOG,
+            #home .CONTACT {
+                font-size: 36px;
+            }
+
+        }
+
+        /* ################################################################################################################################## */
+
+        #LANDSCAPE {
+            position: relative;
+            width: 100%;
+        }
+
+        #LANDSCAPE .section01 {
+            max-width: 1280px;
+            height: 360px;
+            margin: 0 auto 60px auto;
+        }
+
+        #LANDSCAPE .section01 .box_container {
+            position: relative;
+            height: 360px;
+        }
+
+        #LANDSCAPE .section01 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #LANDSCAPE .section01 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #LANDSCAPE .section01 .img01 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/1091.jpg) center center;
+            background-size: cover;
+        }
+
+        #LANDSCAPE .article_container {
+            max-width: 1280px;
+            margin: 0 auto 120px auto;
+            box-sizing: border-box;
+            justify-content: space-between;
+        }
+
+        #LANDSCAPE .article_container .flex_item {
+            flex: 0 1 30%;
+            padding: 0 20px 20px 20px;
+            box-sizing: border-box;
+            background: #CE9063;
+            color: #234873;
+        }
+
+        #LANDSCAPE .article_container .separation_line {
+            margin: 0 9px;
+        }
+
+        #LANDSCAPE .section02 {
+            position: relative;
+            margin: 0 0 120px 0;
+        }
+
+        #LANDSCAPE .section02 .img_wall_container {
+            width: 100%;
+            height: 854px;
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
+
+        #LANDSCAPE .section02 .ul_img_wall {
+            position: relative;
+            height: 840px;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(16, 280px);
+            grid-template-rows: repeat(3, 280px);
+            grid-row-gap: 2px;
+            grid-column-gap: 2px;
+            list-style: none;
+        }
+
+        #LANDSCAPE .section02 .ul_img_wall_t {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            height: 840px;
+            padding: 0;
+            margin: 0;
+            background: #FAFAF1;
+            display: grid;
+            grid-template-columns: repeat(16, 280px);
+            grid-template-rows: repeat(3, 280px);
+            grid-row-gap: 2px;
+            grid-column-gap: 2px;
+            list-style: none;
+            transition: all 0.5s;
+            pointer-events: none;
+        }
+
+        #LANDSCAPE .left_arrow {
+            position: absolute;
+            left: 0;
+            top: calc(50% - 120px);
+            width: 60px;
+            height: 180px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #LANDSCAPE .right_arrow {
+            position: absolute;
+            right: 0;
+            top: calc(50% - 120px);
+            width: 60px;
+            height: 180px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #LANDSCAPE .img_wall_title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 0 18px;
+            font-size: 123px;
+            background: #CE9063;
+            filter: opacity(0);
+            transition: all 0.4s; 
+        }
+
+        #LANDSCAPE .img_wall_container:hover ~ .img_wall_title{
+            filter: opacity(1);
+        }
+
+        #LANDSCAPE .img_wall_title:hover {
+            filter: opacity(1);
+        }
+
+        #LANDSCAPE .section03 {
+            max-width: 1280px;
+            height: 360px;
+            margin: 0 auto 180px auto;
+        }
+
+        #LANDSCAPE .section03 .box_container {
+            position: relative;
+            height: 360px;
+        }
+
+        #LANDSCAPE .section03 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #LANDSCAPE .section03 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #LANDSCAPE .section03 .img01 {
+            float: left;
+            width: 305px;
+            height: 100%;
+            margin-right: 20px;
+            background: url(./img/home/banner-1_s.jpg) left center;
+            background-size: cover;
+        }
+
+        #LANDSCAPE .section03 .img02 {
+            float: right;
+            width: 305px;
+            height: 100%;
+            background: url(./img/home/banner-1_s.jpg) right center;
+            background-size: cover;
+        }
+
+        #LANDSCAPE .section03 .img03 {
+            width: 100%;
+            height: 360px;
+            background: #ce9063;
+            background-size: cover;
+        }
+
+        #LANDSCAPE .section03 .img03 p {
+            padding: 40px;
+            font-size: 28px;
+            color: #234873;
+        }
+
+        .grid_item01 {
+            background: url(./img/the-parterre-560x560.jpg) no-repeat;
+            background-size: cover;
+            grid-column-start: 1;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+        }
+
+        .grid_item02 {
+            background-image: url(./img/Orchard-House-039-280x280.jpg);
+            grid-column-start: 3;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+        }
+
+        .grid_item03 {
+            background-image: url(./img/Southlands-Lo-Res-20-560x280.jpg);
+
+            grid-column-start: 4;
+            grid-column-end: 6;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+        }
+
+        .grid_item04 {
+            background-image: url(./img/after-CG-1-280x280.jpg);
+            grid-column-start: 6;
+            grid-column-end: 7;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+        }
+
+        .grid_item05 {
+            background-image: url(./img/IMG_8835-280x560.jpg);
+
+            grid-column-start: 7;
+            grid-column-end: 8;
+            grid-row-start: 1;
+            grid-row-end: 3;
+        }
+
+        .grid_item06 {
+            background-image: url(./img/Orchard-House-068-280x560.jpg);
+
+            grid-column-start: 3;
+            grid-column-end: 4;
+            grid-row-start: 2;
+            grid-row-end: 4;
+
+        }
+
+        .grid_item07 {
+            background-image: url(./img/Orchard-House-032-280x280.jpg);
+
+            grid-column-start: 4;
+            grid-column-end: 5;
+            grid-row-start: 2;
+            grid-row-end: 3;
+
+        }
+
+        .grid_item08 {
+            background-image: url(./img/spiral-trees-far-right-560x560.jpg);
+            grid-column-start: 5;
+            grid-column-end: 7;
+            grid-row-start: 2;
+            grid-row-end: 4;
+        }
+
+        .grid_item09 {
+            background-image: url(./img/IMG_2813-280x280.jpg);
+
+            grid-column-start: 1;
+            grid-column-end: 2;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item10 {
+            background-image: url(./img/Lo-Res-Rivermead-54-280x280.jpg);
+
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item11 {
+            background-image: url(./img/Manor-house-280x280.jpg);
+
+            grid-column-start: 4;
+            grid-column-end: 5;
+            grid-row-start: 3;
+            grid-row-end: 4;
+
+        }
+
+        .grid_item12 {
+            background-image: url(./img/16-14-280x280.jpg);
+
+            grid-column-start: 7;
+            grid-column-end: 8;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item13 {
+            background: url(./img/img_wall/ia_100000036.jpg) center;
+            background-size: cover;
+            grid-column-start: 8;
+            grid-column-end: 9;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item14 {
+            background: url(./img/img_wall/ia_500000001.jpg) center;
+            background-size: cover;
+            grid-column-start: 8;
+            grid-column-end: 10;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
+
+        .grid_item15 {
+            background: url(./img/img_wall/ia_500000506.jpg) center;
+            background-size: cover;
+            grid-column-start: 8;
+            grid-column-end: 9;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item16 {
+            background: url(./img/img_wall/ia_300000003.jpg) center;
+            background-size: cover;
+            grid-column-start: 9;
+            grid-column-end: 11;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item17 {
+            background: url(./img/img_wall/ia_1000000030.jpg) center;
+            background-size: cover;
+            grid-column-start: 9;
+            grid-column-end: 10;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item18 {
+            background: url(./img/img_wall/ia_500000002.jpg) center;
+            background-size: cover;
+            grid-column-start: 10;
+            grid-column-end: 12;
+            grid-row-start: 2;
+            grid-row-end: 4;
+        }
+
+        .grid_item19 {
+            background: url(./img/img_wall/ia_100000639.jpg) center;
+            background-size: cover;
+            grid-column-start: 11;
+            grid-column-end: 12;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item20 {
+            background: url(./img/img_wall/ia_400000443.jpg) center;
+            background-size: cover;
+            grid-column-start: 12;
+            grid-column-end: 13;
+            grid-row-start: 1;
+            grid-row-end: 3;
+        }
+
+        .grid_item21 {
+            background: url(./img/img_wall/ia_100000634.jpg) center;
+            background-size: cover;
+            grid-column-start: 12;
+            grid-column-end: 13;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item22 {
+            background: url(./img/img_wall/ia_300000029.jpg) center;
+            background-size: cover;
+            grid-column-start: 13;
+            grid-column-end: 14;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item23 {
+            background: url(./img/img_wall/ia_100000648.jpg) center;
+            background-size: cover;
+            grid-column-start: 13;
+            grid-column-end: 14;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
+
+        .grid_item24 {
+            background: url(./img/img_wall/ia_900000015.jpg) center;
+            background-size: cover;
+            grid-column-start: 13;
+            grid-column-end: 15;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item25 {
+            background: url(./img/img_wall/ia_900000402.jpg) center;
+            background-size: cover;
+            grid-column-start: 14;
+            grid-column-end: 16;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item26 {
+            background: url(./img/img_wall/ia_300000570.jpg) center;
+            background-size: cover;
+            grid-column-start: 14;
+            grid-column-end: 15;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
+
+        .grid_item27 {
+            background: url(./img/img_wall/ia_300000002.jpg) center;
+            background-size: cover;
+            grid-column-start: 15;
+            grid-column-end: 17;
+            grid-row-start: 2;
+            grid-row-end: 4;
+        }
+
+        .grid_item28 {
+            background: url(./img/img_wall/ia_300000030.jpg) center;
+            background-size: cover;
+            grid-column-start: 16;
+            grid-column-end: 17;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item01_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 1;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+        }
+
+        .grid_item02_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 3;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+        }
+
+        .grid_item03_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 4;
+            grid-column-end: 6;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+        }
+
+        .grid_item04_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 6;
+            grid-column-end: 7;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+        }
+
+        .grid_item05_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 7;
+            grid-column-end: 8;
+            grid-row-start: 1;
+            grid-row-end: 3;
+        }
+
+        .grid_item06_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 3;
+            grid-column-end: 4;
+            grid-row-start: 2;
+            grid-row-end: 4;
+
+        }
+
+        .grid_item07_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 4;
+            grid-column-end: 5;
+            grid-row-start: 2;
+            grid-row-end: 3;
+
+        }
+
+        .grid_item08_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 5;
+            grid-column-end: 7;
+            grid-row-start: 2;
+            grid-row-end: 4;
+        }
+
+        .grid_item09_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 1;
+            grid-column-end: 2;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item10_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item11_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 4;
+            grid-column-end: 5;
+            grid-row-start: 3;
+            grid-row-end: 4;
+
+        }
+
+        .grid_item12_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 7;
+            grid-column-end: 8;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item13_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 8;
+            grid-column-end: 9;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item14_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 8;
+            grid-column-end: 10;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
+
+        .grid_item15_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 8;
+            grid-column-end: 9;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item16_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 9;
+            grid-column-end: 11;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item17_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 9;
+            grid-column-end: 10;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item18_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 10;
+            grid-column-end: 12;
+            grid-row-start: 2;
+            grid-row-end: 4;
+        }
+
+        .grid_item19_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 11;
+            grid-column-end: 12;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item20_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 12;
+            grid-column-end: 13;
+            grid-row-start: 1;
+            grid-row-end: 3;
+        }
+
+        .grid_item21_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 12;
+            grid-column-end: 13;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item22_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 13;
+            grid-column-end: 14;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item23_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 13;
+            grid-column-end: 14;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
+
+        .grid_item24_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 13;
+            grid-column-end: 15;
+            grid-row-start: 3;
+            grid-row-end: 4;
+        }
+
+        .grid_item25_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 14;
+            grid-column-end: 16;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .grid_item26_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 14;
+            grid-column-end: 15;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
+
+        .grid_item27_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 15;
+            grid-column-end: 17;
+            grid-row-start: 2;
+            grid-row-end: 4;
+        }
+
+        .grid_item28_t {
+            border: 1px solid #CE9063;
+            grid-column-start: 16;
+            grid-column-end: 17;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        /*###############################################  */
+
+        @media screen and (max-width: 1280px) {
+            #LANDSCAPE .section01 {
+                height: 100%;
+            }
+
+            #LANDSCAPE .section01 .box_container {
+                height: 100%;
+            }
+
+            #LANDSCAPE .section01 .leftbox {
+                position: static;
+                width: 100%;
+            }
+
+            #LANDSCAPE .section01 .rightbox {
+                position: static;
+                width: 100%;
+            }
+
+            #LANDSCAPE .section02 .img_wall_container {
+                height: 735px;
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall {
+                grid-template-columns: repeat(16, 245px);
+                grid-template-rows: repeat(3, 245px);
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall_t {
+                grid-template-columns: repeat(16, 245px);
+                grid-template-rows: repeat(3, 245px);
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            #LANDSCAPE .section02 .img_wall_container {
+                height: 630px;
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall {
+                grid-template-columns: repeat(16, 210px);
+                grid-template-rows: repeat(3, 210px);
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall_t {
+                grid-template-columns: repeat(16, 210px);
+                grid-template-rows: repeat(3, 210px);
+            }
+
+            #LANDSCAPE .img_wall_title {
+                font-size: 99px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            #LANDSCAPE .article_container .flex_item {
+                padding: 0 9px 20px 9px;
+            }
+
+            #LANDSCAPE .article_container .separation_line {
+                margin: 0 3px;
+            }
+
+            #LANDSCAPE .section02 .img_wall_container {
+                height: 525px;
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall {
+                grid-template-columns: repeat(16, 175px);
+                grid-template-rows: repeat(3, 175px);
+                grid-row-gap: 1px;
+                grid-column-gap: 1px;
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall_t {
+                grid-template-columns: repeat(16, 175px);
+                grid-template-rows: repeat(3, 175px);
+                grid-row-gap: 1px;
+                grid-column-gap: 1px;
+            }
+
+            #LANDSCAPE .img_wall_title {
+                font-size: 66px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+
+            #LANDSCAPE .article_container {
+                flex-direction: column;
+            }
+
+            #LANDSCAPE .article_container {
+                margin: 0 0 60px 0;
+            }
+
+            #LANDSCAPE .article_container .flex_item {
+                width: 100%;
+            }
+
+            #LANDSCAPE .section02 {
+                margin: 0 0 60px 0;
+            }
+
+            #LANDSCAPE .section02 .img_wall_container {
+                height: 420px;
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall {
+                grid-template-columns: repeat(16, 140px);
+                grid-template-rows: repeat(3, 140px);
+            }
+
+            #LANDSCAPE .section02 .ul_img_wall_t {
+                grid-template-columns: repeat(16, 140px);
+                grid-template-rows: repeat(3, 140px);
+            }
+
+            #LANDSCAPE .img_wall_title {
+                font-size: 45px;
+            }
+
+            #LANDSCAPE .section03 .img03 p {
+                padding: 9px;
+                font-size: 20px;
+            }
+
+            #LANDSCAPE .section03 {
+                margin: 0 0 120px 0;
+            }
+        }
+
+        @media screen and (max-width: 375px) {
+            #LANDSCAPE .img_wall_title {
+                font-size: 30px;
+            }
+        }
+
+        /* ################################################################################################################################### */
+
+        #GREENING {
+            position: relative;
+            width: 100%;
+        }
+
+        #GREENING .section01 {
+            max-width: 1280px;
+            height: 360px;
+            margin: 0 auto 60px auto;
+        }
+
+        #GREENING .section01 .box_container {
+            position: relative;
+            height: 360px;
+        }
+
+        #GREENING .section01 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #GREENING .section01 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #GREENING .section01 .img01 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/bg-copyrights.png) center;
+            background-size: cover;
+        }
+
+        #GREENING .section02 {
+            max-width: 1280px;
+            height: 740px;
+            margin: 0 auto 60px auto;
+        }
+
+        #GREENING .section02 .box_container {
+            position: relative;
+            height: 740px;
+        }
+
+        #GREENING .section02 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 740px;
+        }
+
+        #GREENING .section02 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 740px;
+        }
+
+        #GREENING .section02 .img01 {
+            width: 100%;
+            height: 360px;
+            margin-bottom: 20px;
+            background: #234873;
+            background-size: cover;
+        }
+
+        #GREENING .section02 .img01 p {
+            padding: 40px;
+            font-size: 28px;
+            color: #ce9063;
+        }
+
+        #GREENING .section02 .img02 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/IAPLC18DEF2.jpg) center;
+            background-size: cover;
+        }
+
+        #GREENING .section02 .img03 {
+            width: 100%;
+            height: 740px;
+            background: url(./img/home/ta04_bg01.jpg) center;
+            background-size: cover;
+        }
+
+        #GREENING .section03 {
+            max-width: 1280px;
+            height: 740px;
+            margin: 0 auto 180px auto;
+        }
+
+        #GREENING .section03 .box_container {
+            position: relative;
+            height: 740px;
+        }
+
+        #GREENING .section03 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 740px;
+        }
+
+        #GREENING .section03 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 740px;
+        }
+
+        #GREENING .section03 .img01 {
+            width: 100%;
+            height: 360px;
+            margin-bottom: 20px;
+            background: #ce9063;
+            background-size: cover;
+        }
+
+        #GREENING .section03 .img01 p {
+            padding: 40px;
+            font-size: 28px;
+            color: #234873;
+        }
+
+        #GREENING .section03 .img02 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/DSC00261.jpg) center;
+            background-size: cover;
+        }
+
+        #GREENING .section03 .img03 {
+            width: 100%;
+            height: 740px;
+            background: url(./img/home/a01.jpg) center;
+            background-size: cover;
+        }
+
+        #GREENING .more {
+            position: relative;
+            width: 210px;
+            float: right;
+            text-align: end;
+            margin: 0 15% 0 0;
+        }
+
+        #GREENING .more p {
+            position: absolute;
+            left: 0;
+            color: #FAFAF1;
+        }
+
+        @media screen and (max-width: 1280px) {
+            #GREENING .section01 {
+                height: 100%;
+            }
+
+            #GREENING .section01 .box_container {
+                height: 100%;
+            }
+
+            #GREENING .section01 .leftbox {
+                position: static;
+                width: 100%;
+            }
+
+            #GREENING .section01 .rightbox {
+                position: static;
+                width: 100%;
+            }
+
+        }
+
+        @media screen and (max-width: 576px) {
+            #GREENING .section02 .img01 p {
+                padding: 9px;
+                font-size: 20px;
+            }
+
+            #GREENING .section03 {
+                margin: 0 auto 120px auto;
+            }
+
+            #GREENING .section03 .img01 p {
+                padding: 9px;
+                font-size: 20px;
+            }
+
+        }
+
+
+        /* ################################################################################################################################## */
+
+        #SERVICE {
+            position: relative;
+            width: 100%;
+        }
+
+        #SERVICE .section01 {
+            max-width: 1280px;
+            height: 360px;
+            margin: 0 auto 60px auto;
+        }
+
+        #SERVICE .section01 .box_container {
+            position: relative;
+            height: 360px;
+        }
+
+        #SERVICE .section01 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #SERVICE .section01 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #SERVICE .section01 .img01 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/b01.jpg) center;
+            background-size: cover;
+        }
+
+        #SERVICE .section02 {
+            max-width: 1280px;
+            height: 740px;
+            margin: 0 auto 180px auto;
+        }
+
+        #SERVICE .section02 .box_container {
+            position: relative;
+            height: 740px;
+        }
+
+        #SERVICE .section02 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 740px;
+        }
+
+        #SERVICE .section02 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 740px;
+        }
+
+        #SERVICE .section02 .img01 {
+            width: 100%;
+            height: 360px;
+            margin-bottom: 20px;
+            background: url(./img/home/b03.jpg) center;
+            background-size: cover;
+        }
+
+        #SERVICE .section02 .img02 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/b02.jpg) center;
+            background-size: cover;
+        }
+
+        #SERVICE .section02 .img03 {
+            width: 100%;
+            height: 740px;
+            background: #CE9063;
+            background-size: cover;
+        }
+
+        #SERVICE .section02 .service_list {
+            margin: 0;
+            padding: 40px 40px 0 40px;
+            list-style: none;
+        }
+
+        #SERVICE .section02 .list_item {
+            position: relative;
+            display: inline-block;
+            margin: 0 5% 0 0;
+
+        }
+
+        #SERVICE .section02 .num {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 42px;
+            line-height: 42px;
+            color: #FAFAF1;
+        }
+
+        #SERVICE .section02 .top_text {
+            position: absolute;
+            left: 27px;
+            top: 0;
+            font-size: 14px;
+            line-height: 14px;
+            color: #FAFAF1;
+        }
+
+        #SERVICE .section02 .bottom_text {
+            float: left;
+            font-size: 26px;
+            line-height: 26px;
+            margin: 15px 0 0 26px;
+            position: relative;
+            color: #FAFAF1;
+        }
+
+        #SERVICE .section02 .article_container {
+            margin: 0;
+            padding: 0 40px 40px 40px;
+            color: #234873;
+        }
+
+
+        @media screen and (max-width: 1280px) {
+            #SERVICE .section01 {
+                height: 100%;
+            }
+
+            #SERVICE .section01 .box_container {
+                height: 100%;
+            }
+
+            #SERVICE .section01 .leftbox {
+                position: static;
+                width: 100%;
+            }
+
+            #SERVICE .section01 .rightbox {
+                position: static;
+                width: 100%;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            #SERVICE .section02 {
+                margin: 0 auto 120px auto;
+            }
+        }
+
+        /* #################################################################################################################################### */
+
+        #BLOG {
+            position: relative;
+            width: 100%;
+        }
+
+        #BLOG .section01 {
+            max-width: 1280px;
+            height: 360px;
+            margin: 0 auto 60px auto;
+        }
+
+        #BLOG .section01 .box_container {
+            position: relative;
+            height: 360px;
+        }
+
+        #BLOG .section01 .leftbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #BLOG .section01 .rightbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 630px;
+            height: 360px;
+        }
+
+        #BLOG .section01 .img01 {
+            width: 100%;
+            height: 360px;
+            background: url(./img/home/t10.jpg) center;
+            background-size: cover;
+        }
+
+        #BLOG .section02 {
+            max-width: 1280px;
+            height: 845px;
+            margin: 0 auto 180px auto;
+        }
+
+        #BLOG .section02 .box_container {
+            position: relative;
+            width: 100%;
+            height: 845px;
+        }
+
+        #BLOG .section02 .topbox {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 300px;
+        }
+
+        #BLOG .section02 .img03 {
+            width: 100%;
+            height: 300px;
+        }
+
+        #BLOG #blog_list {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            list-style: none;
+        }
+
+        #BLOG #blog_list .list_item {
+            flex: 0 1 33%;
+            overflow: hidden;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+
+        #BLOG #blog_list .list_item a {
+            display: block;
+        }
+
+        #BLOG #blog_list .list_item:hover .text_area {
+            transform: translateY(-225px);
+        }
+
+        #BLOG #blog_list .list_item:hover .image_box::before {
+            filter: opacity(1);
+        }
+
+        #BLOG #blog_list .list_item:hover .image_box .image {
+            transform: scale(1.2);
+        }
+
+        #BLOG #blog_list .article_container {
+            overflow: hidden;
+            height: 300px;
+            border-radius: 3px;
+        }
+
+        #BLOG #blog_list .image_box {
+            position: relative;
+            width: 100%;
+            height: 225px;
+            overflow: hidden;
+        }
+
+        #BLOG #blog_list .image_box::before {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: rgba(250, 250, 241, 0.8);
+            filter: opacity(0);
+            transition: all 0.4s linear;
+        }
+
+        #BLOG #blog_list .text_area {
+            position: relative;
+            z-index: 2;
+            height: 225px;
+            padding: 20px;
+            transition: all 0.2s linear;
+            transform: translateY(0);
+        }
+
+        #BLOG .section02 .bottombox {
+            position: absolute;
+            top: 320px;
+            left: 0;
+            width: 100%;
+            height: 525px;
+            justify-content: space-between;
+        }
+
+        #BLOG .section02 .img01 {
+            width: 630px;
+        }
+
+        #BLOG .section02 .img02 {
+            width: 630px;
+        }
+
+        #BLOG .bottombox p.title {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        #BLOG .bottombox ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #BLOG .bottombox .list_item {
+            margin: 0 0 9px 0;
+        }
+
+        #BLOG .bottombox .list_item::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 1px;
+            margin: 0 auto;
+            border-bottom: solid 1px #e6e6e6;
+        }
+
+        #BLOG .bottombox .list_item a {
+            display: block;
+        }
+
+        #BLOG .bottombox .thumbnail_container {
+            padding: 9px 6px;
+        }
+
+        #BLOG .time {
+            position: relative;
+            text-align: center;
+            padding: 0 5px;
+        }
+
+        #BLOG .time::after {
+            content: "";
+            display: block;
+            height: 50px;
+            border-left: solid 1px #2D2D2D;
+            position: absolute;
+            top: 0;
+            right: -14px;
+            transform: rotate(15deg);
+        }
+
+        #BLOG .title_container {
+            align-items: center;
+        }
+
+        #BLOG .time span {
+            display: block;
+            margin: 0 auto;
+            font-family: "AlegreyaSansSC-Light";
+        }
+
+        #BLOG .month {
+            font-size: 20px;
+            line-height: 18px;
+        }
+
+        #BLOG .date {
+            font-size: 32px;
+            line-height: 16px;
+        }
+
+        #BLOG .year {
+            font-size: 16px;
+        }
+
+        #BLOG .line {
+            position: relative;
+            top: -3px;
+            margin: 0 10px 0 0;
+            width: 10px;
+            height: 50px;
+            border-right: solid 1px #333333;
+            transform: rotate(15deg);
+        }
+
+        #BLOG .article_header {
+            padding: 9px 6px 9px;
+        }
+
+        #BLOG .article_title_container {
+            width: 100%;
+            margin-left: 27px;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #BLOG .sub_title {
+            margin: 0;
+            font-size: 12px;
+            line-height: 12px;
+        }
+
+        #BLOG .title {
+            margin: 0;
+            font-size: 24px;
+            line-height: 21px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        #BLOG .section02 .image {
+            width: 100%;
+            height: 225px;
+            margin: 0;
+            transition: all 0.5s linear;
+        }
+
+        #BLOG .section02 .image01 {
+            background: url(./img/blog/1e2c7a8ead70ddb2c18200090268b1dc.jpg) center;
+            background-size: cover;
+        }
+
+        #BLOG .section02 .image02 {
+            background: url(./img/blog/DSC00184.jpg) center;
+            background-size: cover;
+        }
+
+        #BLOG .section02 .image03 {
+            background: url(./img/home/IMG_5192-2.jpg) center;
+            background-size: cover;
+        }
+
+        .thumbnail {
+            flex: 0 0 69px;
+            /* box-sizing: inherit; */
+        }
+
+        .thumbnail01 {
+            background: url(./img/blog/t01.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail02 {
+            background: url(./img/blog/t10.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail03 {
+            background: url(./img/blog/t03.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail04 {
+            background: url(./img/blog/t04.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail05 {
+            background: url(./img/blog/t09.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail06 {
+            background: url(./img/blog/t05.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail07 {
+            background: url(./img/blog/t08.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail08 {
+            background: url(./img/blog/t07.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail09 {
+            background: url(./img/blog/t02.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail10 {
+            background: url(./img/blog/t06.jpg);
+            background-size: cover;
+        }
+
+
+        @media screen and (max-width: 1280px) {
+            #BLOG .section01 {
+                height: 100%;
+            }
+
+            #BLOG .section01 .box_container {
+                height: 100%;
+            }
+
+            #BLOG .section01 .leftbox {
+                position: static;
+                width: 100%;
+            }
+
+            #BLOG .section01 .rightbox {
+                position: static;
+                width: 100%;
+            }
+
+        }
+
+        @media screen and (max-width: 992px) {
+            #BLOG .section02 {
+                height: 1185px;
+            }
+
+            #BLOG .section02 .box_container {
+                height: 1185px;
+            }
+
+            #BLOG .section02 .topbox {
+                height: 640px;
+            }
+
+            #BLOG .section02 .img03 {
+                height: 640px;
+            }
+
+            #BLOG #blog_list .list_item {
+                flex: 0 1 50%;
+                padding: 0 9px 9px;
+                margin: 0 0 20px 0;
+                /* border-bottom: 1px solid #e6e6e6; */
+            }
+
+            #BLOG .section02 .bottombox {
+                top: 660px;
+                height: 1068px;
+            }
+
+        }
+
+        @media screen and (max-width: 576px) {
+            #BLOG .section02 {
+                height: 1658px;
+                margin: 0 0 120px 0;
+            }
+
+            #BLOG .section02 .box_container {
+                height: 1658px;
+            }
+
+            #BLOG .section02 .topbox {
+                height: 970px;
+            }
+
+            #BLOG .section02 .img03 {
+                height: 970px;
+            }
+
+            #BLOG .section02 .img01 {
+                width: 100%;
+            }
+
+            #BLOG .section02 .img02 {
+                width: 100%;
+            }
+
+            #BLOG #blog_list .list_item {
+                flex: 0 1 100%;
+            }
+
+            #BLOG .section02 .bottombox {
+                height: 648px;
+                top: 990px;
+                flex-direction: column;
+            }
+
+            #BLOG .section02 .bottombox .img01 {
+                margin: 0 0 20px 0;
+            }
+
+            #BLOG .section02 .bottombox .ranking .list_item:nth-child(4),
+            .list_item:nth-child(5) {
+                display: none;
+            }
+
+            #BLOG .section02 .bottombox .new .list_item:nth-child(4),
+            .list_item:nth-child(5) {
+                display: none;
+            }
+
+        }
+
+        /* ##################################################################################################################################### */
+        footer {
+            width: 100%;
+            background: #2D2D2D;
+        }
+
+        #footer {
+            width: 100%;
+            max-width: 1920px;
+            height: 180px;
+            border-top: 1px solid #2D2D2D;
+        }
+
+        #footer .social_container {
+            margin: 60px 0 30px 0;
+            justify-content: center;
+        }
+
+        #footer a {
+            color: #FAFAF1;
+        }
+
+        #footer .fb,
+        .tw {
+            padding-right: 9px;
+            margin-right: 9px;
+            border-right: 1px solid #FAFAF1;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #FAFAF1;
+        }
+
+        /* ###################################################################################################################################### */
+
+        .run_top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            padding: 5px 10px;
+            border: 1px solid #2D2D2D;
+            border-radius: 5px;
+            background: #FAFAF1;
+            color: #2D2D2D;
+            box-shadow: 1px 1px 5px rgba(45, 45, 45, 0.1), -1px -1px 5px rgba(45, 45, 45, 0.1), 1px -1px 5px rgba(45, 45, 45, 0.1), -1px 1px 5px rgba(45, 45, 45, 0.1);
+            transform: translateY(40px);
+            filter: opacity(0);
+            transition: all 0.2s linear;
+            cursor: pointer;
+        }
+
+        .run_top_arrow {
+            display: inline-block;
+            width: 17px;
+            height: 17px;
+        }
+
+        /* ##################################################################################################################################### */
+    </style>
+</head>
+
+<body>
+    <div>
+        <header id="header">
+            <div class="header_container">
+                <nav>
+                    <ul class="list flexbox">
+<!--                         <div class="item_container01 flexbox">
+ -->                            <li class="separation_line"></li>
+                            <li class="list_item list_item01">
+                                <a href="index.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon01"></div>
+                                        <p>HOME</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="landscape.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon02"></div>
+                                        <p>LANDSCAPE</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="greening.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon03"></div>
+                                        <p>GREENING</p>
+                                    </div>
+                                </a>
+                            </li>
+<!--                             <li class="separation_line_none"></li>
+ --><!--                         </div>
+ --><!--                         <div class="item_container02 flexbox">
+ -->                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="service.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon04"></div>
+                                        <p>SERVICE</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="blog.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon05"></div>
+                                        <p>BLOG</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <!-- <li class="list_item">
+                                <a href="">
+                                    <div class="container flexbox">
+                                        <div class="icon icon06"></div>
+                                        <p>CONTACT</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li> -->
+<!--                         </div>
+ -->                    </ul>
+                </nav>
+            </div>
+        </header>
+        <div class="home_spacer_container">
+            <div id="home">
+                <div class="holder">
+                    <div class="logo_container">
+                        <a href="">
+                            <h1 class="green">GREEN</h1>
+                            <img class="logo" src="./img/logo.svg" alt="">
+                            <h1 class="maker">MAKER</h1>
+                        </a>
+                    </div>
+                    <nav>
+                        <ul class="list">
+                            <li>
+                                <a class="LANDSCAPE" href="landscape.html">LANDSCAPE</a>
+                            </li>
+                            <li>
+                                <a class="GREENING" href="greening.html">GREENING</a>
+                            </li>
+                            <li>
+                                <a class="SERVICE" href="service.html">SERVICE</a>
+                            </li>
+                            <li>
+                                <a class="BLOG" href="blog.html">BLOG</a>
+                            </li>
+<!--                             <li>
+                                <span class="CONTACT">CONTACT</span>
+                            </li> -->
+                        </ul>
+                    </nav>
+                </div>
+                <div id="barn_front">
+                    <img id="bulb" src=".\img\bulb.png" alt="">
+                    <div id="mint">
+                        <img id="mint_head" src=".\img\mint-head.png" alt="">
+                        <img id="mint_body" src=".\img\mint-body.jpg" alt="">
+                        <img id="mint_shadow" src=".\img\mint-shadow.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="spacer"></div>
+        </div>
+        <div class="content">
+            <div id="LANDSCAPE">
+                <div class="section01">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="title_container">
+                                <h2 class="title">LANDSCAPE</h2>
+                                <p class="subtitle">
+                                    無論何時，放眼望去都是最美的景色。
+                                </p>
+                            </div>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores commodi deleniti porro
+                                sapiente
+                                maxime, eius iste amet cupiditate, omnis consequatur quae. Vero odit officiis quas enim
+                                voluptate
+                                itaque veritatis rerum.
+                            </p>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img01"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="article_container flexbox">
+                    <div class="flex_item">
+                        <h3>What We Do ?</h3>
+                        <p>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi accusamus reiciendis
+                            ea
+                            sit
+                            quas, eligendi esse? Accusamus odit optio architecto nisi earum iusto magni
+                            perferendis
+                            temporibus velit, cumque necessitatibus incidunt.
+                        </p>
+                    </div>
+                    <div class="separation_line"></div>
+                    <div class="flex_item">
+                        <h3>Designing a garden</h3>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi nisi dolores sequi,
+                            dolorem
+                            eligendi modi minima iure voluptas nesciunt suscipit hic. Reprehenderit delectus qui
+                            earum
+                            molestiae alias hic, itaque quae?
+                        </p>
+                    </div>
+                    <div class="separation_line"></div>
+                    <div class="flex_item">
+                        <h3>Chat to us now</h3>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam voluptas, totam,
+                            minima
+                            quibusdam molestias voluptates eaque architecto reprehenderit saepe quae voluptatum,
+                            commodi
+                            cum ab reiciendis! Eveniet unde fuga quasi perspiciatis.
+                        </p>
+                    </div>
+                </div>
+                <div class="section02">
+                    <div class="img_wall_container">
+                        <ul class="ul_img_wall">
+                            <li class="grid_item01">
+                            </li>
+                            <li class="grid_item02">
+                            </li>
+                            <li class="grid_item03">
+                            </li>
+                            <li class="grid_item04">
+                            </li>
+                            <li class="grid_item05">
+                            </li>
+                            <li class="grid_item06">
+                            </li>
+                            <li class="grid_item07">
+                            </li>
+                            <li class="grid_item08">
+                            </li>
+                            <li class="grid_item09">
+                            </li>
+                            <li class="grid_item10">
+                            </li>
+                            <li class="grid_item11">
+                            </li>
+                            <li class="grid_item12">
+                            </li>
+                            <li class="grid_item13">
+                            </li>
+                            <li class="grid_item14">
+                            </li>
+                            <li class="grid_item15">
+                            </li>
+                            <li class="grid_item16">
+                            </li>
+                            <li class="grid_item17">
+                            </li>
+                            <li class="grid_item18">
+                            </li>
+                            <li class="grid_item19">
+                            </li>
+                            <li class="grid_item20">
+                            </li>
+                            <li class="grid_item21">
+                            </li>
+                            <li class="grid_item22">
+                            </li>
+                            <li class="grid_item23">
+                            </li>
+                            <li class="grid_item24">
+                            </li>
+                            <li class="grid_item25">
+                            </li>
+                            <li class="grid_item26">
+                            </li>
+                            <li class="grid_item27">
+                            </li>
+                            <li class="grid_item28">
+                            </li>
+                        </ul>
+                        <ul class="ul_img_wall_t">
+                            <li class="grid_item01_t">
+                            </li>
+                            <li class="grid_item02_t">
+                            </li>
+                            <li class="grid_item03_t">
+                            </li>
+                            <li class="grid_item04_t">
+                            </li>
+                            <li class="grid_item05_t">
+                            </li>
+                            <li class="grid_item06_t">
+                            </li>
+                            <li class="grid_item07_t">
+                            </li>
+                            <li class="grid_item08_t">
+                            </li>
+                            <li class="grid_item09_t">
+                            </li>
+                            <li class="grid_item10_t">
+                            </li>
+                            <li class="grid_item11_t">
+                            </li>
+                            <li class="grid_item12_t">
+                            </li>
+                            <li class="grid_item13_t">
+                            </li>
+                            <li class="grid_item14_t">
+                            </li>
+                            <li class="grid_item15_t">
+                            </li>
+                            <li class="grid_item16_t">
+                            </li>
+                            <li class="grid_item17_t">
+                            </li>
+                            <li class="grid_item18_t">
+                            </li>
+                            <li class="grid_item19_t">
+                            </li>
+                            <li class="grid_item20_t">
+                            </li>
+                            <li class="grid_item21_t">
+                            </li>
+                            <li class="grid_item22_t">
+                            </li>
+                            <li class="grid_item23_t">
+                            </li>
+                            <li class="grid_item24_t">
+                            </li>
+                            <li class="grid_item25_t">
+                            </li>
+                            <li class="grid_item26_t">
+                            </li>
+                            <li class="grid_item27_t">
+                            </li>
+                            <li class="grid_item28_t">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="left_arrow flexbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="40px" height="100px" viewBox="0 0 40 101">
+                            <path class="left_arrow_path" d="M30 0 L6 51 L30 101" stroke="#C6C6C6" stroke-width="9" fill="none" />
+                        </svg>
+                    </div>
+                    <div class="right_arrow flexbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="40px" height="100px" viewBox="0 0 40 101">
+                            <path class="right_arrow_path" d="M10 0 L34 51 L10 101" stroke="#CE9063" stroke-width="9" fill="none" />
+                        </svg>
+                    </div>
+                    <div class="img_wall_title">
+                        <a href="Ls_ptf_01.html">
+                            Chiltern Estate 
+                        </a>
+                    </div>
+                </div>
+                <div class="section03">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="img01">
+
+                            </div>
+                            <div class="img02">
+
+                            </div>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img03">
+                                <a href="landscape.html" style="display: block; height: 100%;">
+                                    <p>Landscape Portfolio</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="GREENING">
+                <div class="section01">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="title_container">
+                                <h2 class="title">GREENING</h2>
+                                <p class="subtitle">
+                                    在生活周遭綴上一抹綠。
+                                </p>
+                            </div>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores commodi deleniti porro
+                                sapiente
+                                maxime, eius iste amet cupiditate, omnis consequatur quae. Vero odit officiis quas enim
+                                voluptate
+                                itaque veritatis rerum.
+                            </p>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img01"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section02">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="img01">
+                                <a href="greening.html" style="display: block; height: 100%;">
+                                <p>Aquascape Portfolio</p>
+                                </a>
+                            </div>
+                            <div class="img02"></div>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img03"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section03">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="img03"></div>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img01">
+                                <a href="greening.html" style="display: block; height: 100%;">
+                                <p>Little Garden Portfolio</p>
+                                </a>
+                            </div>
+                            <div class="img02"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="SERVICE">
+                <div class="section01">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="title_container">
+                                <h2 class="title">SERVICE</h2>
+                                <p class="subtitle">
+                                    從評估到交案，最專業的設計，最專業的服務。
+                                </p>
+                            </div>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores commodi deleniti porro
+                                sapiente
+                                maxime, eius iste amet cupiditate, omnis consequatur quae. Vero odit officiis quas enim
+                                voluptate
+                                itaque veritatis rerum.
+                            </p>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img01"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section02">
+                    <div class="box_container">
+                        <div class="leftbox">
+                            <div class="img03">
+                                <ul class="service_list">
+                                    <li class="list_item list_item01">
+                                        <span class="num">1</span>
+                                        <span class="top_text">testtest</span>
+                                        <span class="bottom_text">ONLINE</span>
+                                    </li>
+                                    <li class="list_item list_item02">
+                                        <span class="num">2</span>
+                                        <span class="top_text">testtest</span>
+                                        <span class="bottom_text">DESIGN</span>
+                                    </li>
+                                    <li class="list_item list_item03">
+                                        <span class="num">3</span>
+                                        <span class="top_text">testtest</span>
+                                        <span class="bottom_text">PRINT</span>
+                                    </li>
+                                </ul>
+                                <div class="article_container">
+                                    <h3>WEBDESIGN, E-COMMERCE UND ONLINE-MARKETING</h3>
+                                    <p>
+                                        Ein professioneller Internetauftritt ist heute ein Muss für alle Unternehmen.
+                                        Kunden
+                                        erwarten sich von einem modernen Webauftritt ein umfassendes Erlebnis, das keine
+                                        Wünsche offen lässt. Die von uns entwickelten Websites und E-Commerce-Lösungen
+                                        punkten mit ebenso anspruchsvollem wie innovativem Design sowie hoher
+                                        Benutzerfreundlichkeit. Die vom Markt geforderte Flexibilität in Bezug auf
+                                        mobile
+                                        Websites erreichen wir durch den konsequenten Einsatz von Responsive Webdesign.
+                                        Dieses garantiert Ihnen die fehlerlose Funktion Ihrer Website auf allen
+                                        Endgeräten
+                                        vom Desktop bis hin zum Smartphone.
+
+                                        Sie möchten die Wartung Ihrer Website selbst übernehmen? Dank spezieller Content
+                                        Management Systeme ist auch das kein Problem und kann von uns auf Wunsch bei der
+                                        Programmierung Ihrer Website gerne berücksichtigt werden. Umfassende
+                                        Online-Marketing-Maßnahmen sind heute ein essenzielles Instrument der
+                                        Kundenbindung
+                                        und eine notwendige Ergänzung zu klassischer Print-Werbung. Dazu gehören nicht
+                                        nur
+                                        eine hochwertige Website, sondern auch ein professionell geführter Social
+                                        Media-Auftritt, eine durchdachte Suchmaschinenoptimierung (SEO), Blogs und
+                                        Newsletter. Wir finden die optimal zu Ihrem Unternehmen passende Lösung und
+                                        entwickeln individuell auf Ihr Unternehmen sowie seine Zielgruppe abgestimmte
+                                        Online-Marketing-Kampagnen, die Ihre Wirkung garantiert nicht verfehlen.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rightbox">
+                            <div class="img01"></div>
+                            <div class="img02"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="BLOG">
+            <div class="section01">
+                <div class="box_container">
+                    <div class="leftbox">
+                        <div class="title_container">
+                            <h2 class="title">BLOG</h2>
+                            <p class="subtitle">
+                                靈感，分享生活。
+                            </p>
+                        </div>
+                        <p class="paragraph">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores commodi deleniti porro
+                            sapiente
+                            maxime, eius iste amet cupiditate, omnis consequatur quae. Vero odit officiis quas enim
+                            voluptate
+                            itaque veritatis rerum.
+                        </p>
+                    </div>
+                    <div class="rightbox">
+                        <div class="img01"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="section02">
+                <div class="box_container">
+                    <div class="topbox">
+                        <div class="img03">
+                            <ul id="blog_list" class="flexbox">
+                                <li class="list_item">
+                                    <a href="article01.html">
+                                        <div class="article_container">
+                                            <div class="article_header flexbox">
+                                                <div class="time">
+                                                    <span class="month">SEP</span>
+                                                    <span class="date">10</span>
+                                                    <span class="year">2019</span>
+                                                </div>
+                                                <div class="article_title_container flexbox">
+                                                    <p class="sub_title">Living with green</p>
+                                                    <h3 class="title">
+                                                        Camping in the room! Mami's living feels the forest in the room
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <div class="image_box">
+                                                <div class="image image01">
+                                                </div>
+                                            </div>
+                                            <div class="text_area">
+                                                <p>
+                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis
+                                                    maxime tempore nesciunt nemo, quaerat totam repellat quia aliquam
+                                                    magnam
+                                                    iste architecto voluptas dignissimos fuga optio, id labore molestias
+                                                    voluptatum perferendis?
+                                                </p>
+                                                <div>more</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="list_item">
+                                    <a href="article01.html">
+                                        <div class="article_container">
+                                            <div class="article_header flexbox">
+                                                <div class="time">
+                                                    <span class="month">SEP</span>
+                                                    <span class="date">10</span>
+                                                    <span class="year">2019</span>
+                                                </div>
+                                                <div class="article_title_container flexbox flexbox">
+                                                    <p class="sub_title">Living with green</p>
+                                                    <h3 class="title">
+                                                        Kokkomacha's veranda gardening with a rich world in a small
+                                                        space
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <div class="image_box">
+                                                <div class="image image02">
+                                                </div>
+                                            </div>
+                                            <div class="text_area">
+                                                <p>
+                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis
+                                                    maxime tempore nesciunt nemo, quaerat totam repellat quia aliquam
+                                                    magnam
+                                                    iste architecto voluptas dignissimos fuga optio, id labore molestias
+                                                    voluptatum perferendis?
+                                                </p>
+                                                <div>more</div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                </li>
+                                <li class="list_item">
+                                    <a href="article01.html">
+                                        <div class="article_container">
+                                            <div class="article_header flexbox">
+                                                <div class="time">
+                                                    <span class="month">SEP</span>
+                                                    <span class="date">10</span>
+                                                    <span class="year">2019</span>
+                                                </div>
+                                                <div class="article_title_container flexbox">
+                                                    <p class="sub_title">Gap Festival</p>
+                                                    <h3 class="title">
+                                                            GORING GAP FESTIVAL GARDEN OPEN DAY
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <div class="image_box">
+                                                <div class="image image03">
+                                                </div>
+                                            </div>
+                                            <div class="text_area">
+                                                <p>
+                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis
+                                                    maxime tempore nesciunt nemo, quaerat totam repellat quia aliquam
+                                                    magnam
+                                                    iste architecto voluptas dignissimos fuga optio, id labore molestias
+                                                    voluptatum perferendis?
+                                                </p>
+                                                <div>more</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bottombox flexbox">
+                        <div class="img01">
+                            <div class="ranking">
+                <p class="title">HOT</p>
+                <ul>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail01">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Greening</p>
+                                        <h3 class="title">
+                                            Ai's living that produces the best hospitality in green
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail02">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">On the big veranda</p>
+                                        <h3 class="title">
+                                            Enjoy the view from the living room with a cat
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail03">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Looked like nature was wonderfu</p>
+                                        <h3 class="title">
+                                            Ask the living master's room to find tips to incorporate and enjoy plants.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail04">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Living that feels the forest</p>
+                                        <h3 class="title">
+                                            Mami's living in Tokyo. It was a nice room with lots of flowers and greens in the garden.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail05">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#driftwood</p>
+                                        <h3 class="title">
+                                            A lot of driftwood and dried flowers are displayed and it feels like a picnic in the room! I painted the walls myself to match the atmosphere
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+                        </div>
+                        <div class="img02">
+                            <div class="new">
+                <p class="title">NEW</p>
+                <ul>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail06">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Goodrooms</p>
+                                        <h3 class="title">
+                                            The large, round dining set was inherited from my mother. This is also a fun atmosphere where I paint myself.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail07">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Propose a “camp life”</p>
+                                        <h3 class="title">
+                                            A camp event is organized by three members so that even beginners can easily participate.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail08">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Plant</p>
+                                        <h3 class="title">
+                                            Plants are indispensable for decorations that feel like camping. Rather than buying fresh flowers every time, they sometimes bring greens in their baskets from their rooms.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail09">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Candles with dry plants</p>
+                                        <h3 class="title">
+                                            Mr. Mami, who goes to the work center of the home center as often as the store clerk makes a mistake. There are lots of fun DIY items in the room.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail10">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Greening</p>
+                                        <h3 class="title">
+                                            Combine the Indian evil spirit and dream catcher with plants.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div id="footer">
+            <div class="social_container flexbox">
+                <div class="fb">
+                    <a href="">
+                        Facebook
+                    </a>
+                </div>
+                <div class="tw">
+                    <a href="">
+                        Twitter
+                    </a>
+                </div>
+                <div class="ig">
+                    <a href="">
+                        Instagram
+                    </a>
+                </div>
+            </div>
+            <p class="copyright">
+                Copyright © 2019 GreenMaker design workshop All rights reserved.
+            </p>
+        </div>
+    </footer>
+    <div class="run_top">
+        <div class="run_top_arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="17px" height="17px">
+                <path d="M0 13 L9 6 L17 13" stroke="#2D2D2D" stroke-width="1" fill="none" />
+            </svg>
+        </div>
+    </div>
+<!--         <div class="xy"></div>
+ -->
+</body>
+
+</html>

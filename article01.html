@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // back to top
+            $(".run_top").click(function () {
+                $("html, body").animate({
+                    scrollTop: $("body").offset().top
+                });
+            });
+
+            // scroll
+            var previousScroll = 0; 
+            $(window).scroll(function() {
+                var scrollTop = document.documentElement.scrollTop;
+                if (scrollTop > 1) {
+                    if (scrollTop > previousScroll) {
+                        $(".run_top").css({
+                            "transform": "scaleY(0)"
+                        });
+                    } else {
+                        $(".run_top").css({
+                            "transform": "scaleY(1)"
+                        });
+                    }
+                }
+
+                if (scrollTop <= 1) {
+                    $(".run_top").css({
+                        "transform": "scaleY(0)"
+                    });
+                }
+
+                previousScroll = scrollTop;
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/blog.css">
+    <style>
+
+        .content {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            justify-content: space-between;
+        }
+
+        #article_area {
+            flex: 0 1 980px;
+            margin: 0;
+            padding: 0 20px 0 0;
+            box-sizing: border-box;
+        }
+
+        #article_area .read_area {
+            margin: 120px 0 0 0;
+            padding: 0 6px;
+        }
+
+        #article_area article::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 1px;
+            margin: 60px auto 120px auto;
+            border-bottom: solid 1px #C7C7C7;
+        }
+
+        #article_area .title_container_s {
+            max-width: 1280px;
+            margin: 0 auto 60px auto; 
+            box-sizing: border-box;
+        }
+
+        .thumbnail {
+            flex: 0 0 69px;
+        }
+
+        .thumbnail01 {
+            background: url(./img/blog/t01.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail02 {
+            background: url(./img/blog/t10.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail03 {
+            background: url(./img/blog/t03.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail04 {
+            background: url(./img/blog/t04.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail05 {
+            background: url(./img/blog/t09.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail06 {
+            background: url(./img/blog/t05.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail07 {
+            background: url(./img/blog/t08.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail08 {
+            background: url(./img/blog/t07.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail09 {
+            background: url(./img/blog/t02.jpg);
+            background-size: cover;
+        }
+
+        .thumbnail10 {
+            background: url(./img/blog/t06.jpg);
+            background-size: cover;
+        }
+
+        .img {
+            width: 100%;
+            height: 225px;
+            margin: 0;
+            transition: all 0.6s linear;
+        }
+
+        .img01 {
+            background: url(./img/blog/1e2c7a8ead70ddb2c18200090268b1dc.jpg) center;
+            background-size: cover;
+        }
+
+        .img02 {
+            background: url(./img/blog/DSC00184.jpg);
+            background-size: cover;
+        }
+
+        .img03 {
+            background: url(./img/blog/DSC00261.jpg);
+            background-size: cover;
+        }
+
+        .img04 {
+            background: url(./img/blog/DSC01207.jpg);
+            background-size: cover;
+        }
+
+        .img05 {
+            background: url(./img/blog/DSC03739.jpg);
+            background-size: cover;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        /* ########################################################################################################################################## */
+
+        @media screen and (max-width: 992px) {
+
+            #article_area {
+                padding: 0;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            #article_area .read_area {
+                margin: 60px 0 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+            <div class="header_container">
+                <nav>
+                    <ul class="list flexbox">
+<!--                         <div class="item_container01 flexbox">
+ -->                            <li class="separation_line"></li>
+                            <li class="list_item list_item01">
+                                <a href="index.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon01"></div>
+                                        <p>HOME</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="landscape.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon02"></div>
+                                        <p>LANDSCAPE</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="greening.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon03"></div>
+                                        <p>GREENING</p>
+                                    </div>
+                                </a>
+                            </li>
+<!--                             <li class="separation_line_none"></li>
+ --><!--                         </div>
+ --><!--                         <div class="item_container02 flexbox">
+ -->                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="service.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon04"></div>
+                                        <p>SERVICE</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <li class="list_item">
+                                <a href="blog.html">
+                                    <div class="container flexbox">
+                                        <div class="icon icon05"></div>
+                                        <p>BLOG</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li>
+                            <!-- <li class="list_item">
+                                <a href="">
+                                    <div class="container flexbox">
+                                        <div class="icon icon06"></div>
+                                        <p>CONTACT</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="separation_line"></li> -->
+<!--                         </div>
+ -->                    </ul>
+                </nav>
+            </div>
+        </header>
+    <div class="title_container">
+        <div class="bread_crumb">
+            <p>Home</p>
+            <div class="bread_crumb_arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="13px" height="13px">
+                    <path d="M4 0 L11 7 L4 13" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                </svg>
+            </div>
+            <p>Blog</p>
+            <div class="bread_crumb_arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="13px" height="13px">
+                    <path d="M4 0 L11 7 L4 13" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                </svg>
+            </div>
+            <p>
+                Goodroom Journal aaaa aaa aaa aa all asdas asdasd s as adgs s dsfds dsfs a a dsdas
+            </p>
+        </div>
+        <h2 class="title">Blog</h2>
+    </div>
+    <div class="content flexbox">
+        <div id="article_area">
+            <article>
+                <div class="content">
+                    <div class="article_header flexbox">
+                            <div class="time">
+                                <span class="month">SEP</span>
+                                <span class="date">10</span>
+                                <span class="year">2019</span>
+                            </div>
+                            <div class="article_title_container">
+                                <p class="sub_title">#Greening</p>
+                                <h3 class="title">
+                                    Kokkomacha's veranda gardening with a rich world in a small
+                                                        space
+                                </h3>
+                            </div>
+                        </div>
+                    <div class="read_area">
+                        <div>
+                            <img src="./img/article01/img (1).jpg" alt="">
+                        </div>
+                        <p>
+                            Visit popular botanical shops in the city to find tips on how to incorporate and enjoy
+                            plants.
+                            This time, we will introduce “Mugihana”, a florist right from Yoyogi Uehara station. It was
+                            a florist that the people of the city rely on for their choice of flowers and arrangements.
+                        </p>
+                        <h4>
+                            I want to provide flowers that suit my customers.
+                        </h4>
+                        <div>
+                            <img src="./img/article01/img (2).jpg" alt="">
+                        </div>
+                        <p>
+                            Mugihana is a florist loved by the people of the city who opened a shop in Yoyogi Uehara for
+                            11 years and moved to the current location for about 4 years.
+                            The store owner, Hideo Horikawa, arranged the bouquets and arrangements in a clever way in
+                            line with the order of the flowers.
+
+                            “Because it is a florist in town, it is a job that meets the needs of customers. The best
+                            way is to provide things that meet the needs.
+                        </p>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (3).jpg" alt="">
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (4).jpg" alt="">
+                            <span>
+                                Mr. Horikawa chooses a lot of flowers and creates an arrangement. This is an order for
+                                “Gorgeous!” For a birthday present.
+                            </span>
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (5).jpg" alt="">
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (6).jpg" alt="">
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (7).jpg" alt="">
+                            <span>
+                                Recommended flowers of this season, such as hydrangea, glaze, and lilac, are also
+                                selected in the store, with large ones and exquisite shades.
+                            </span>
+                        </div>
+                        <p>
+                            For those who buy for home use, the size of the vase, the place to decorate, and the color
+                            you like will be detailed, and it will help you find what suits you.
+                        </p>
+                        <p>
+                            “Dare, I don't write the price. I want you to choose from things like the first impression
+                            rather than the price, something that caught my eye.”
+                        </p>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (8).jpg" alt="">
+                            <span>
+                                Yamaboshi with a stunning branch that reaches the ceiling.
+                            </span>
+                        </div>
+                        <h4>
+                            “Your favorite”
+                        </h4>
+                        <div>
+                            <img src="./img/article01/img (9).jpg" alt="">
+                            <span>
+                                In addition to potted flowers, herbs, and succulent plants, there were a few other rare
+                                items such as air plants and epiphytic orchids.
+                            </span>
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (10).jpg" alt="">
+                            <span>
+                                The recently popular succulent plant, Agave Parry, is also quite large.
+                            </span>
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (11).jpg" alt="">
+                            <span>
+                                Chukinren from China. "I like this kind of thing"
+                            </span>
+                        </div>
+                        <div class="holder"></div>
+                        <div>
+                            <img src="./img/article01/img (12).jpg" alt="">
+                            <span>
+                                “Tabibitoki” taught me something unusual. Characterized by a bright blue seed.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <div class="title_container_s">
+                <h3 class="title">
+                    相關文章
+                </h3>
+            </div>
+            <ul id="blog_list" class="flexbox">
+                <li class="list_item list_item01">
+                <a href="article01.html">
+                    <div class="article_container">
+                        <div class="article_header flexbox">
+                            <div class="time">
+                                <span class="month">SEP</span>
+                                <span class="date">10</span>
+                                <span class="year">2019</span>
+                            </div>
+                            <div class="article_title_container">
+                                <p class="article_sub_title">#Greening</p>
+                                <h3 class="article_title">
+                                    Goodroom Journal aaaa aaa aaa aa all asdas asdasd s as adgs s dsfds dsfs a a dsdas
+                                    dgfs dsds dfs dfs dfs
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="img_box">
+                            <div class="img img01">
+                            </div>
+                        </div>
+                        <div class="text_area">
+                            <p>
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis
+                                maxime tempore nesciunt nemo, quaerat totam repellat quia aliquam magnam
+                                iste architecto voluptas dignissimos fuga optio, id labore molestias
+                                voluptatum perferendis?
+                            </p>
+                            <div>more</div>
+                        </div>
+                    </div>
+                </a>
+                </li>
+                <li class="list_item list_item01">
+                <a href="article01.html">
+                    <div class="article_container">
+                        <div class="article_header flexbox">
+                            <div class="time">
+                                <span class="month">SEP</span>
+                                <span class="date">10</span>
+                                <span class="year">2019</span>
+                            </div>
+                            <div class="article_title_container">
+                                <p class="article_sub_title">#Greening</p>
+                                <h3 class="article_title">
+                                    Goodroom Journal aaaa aaa aaa aa all asdas asdasd s as adgs s dsfds dsfs a a dsdas
+                                    dgfs dsds dfs dfs dfs
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="img img01">
+                        </div>
+                        <div class="text_area">
+                            <p>
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis
+                                maxime tempore nesciunt nemo, quaerat totam repellat quia aliquam magnam
+                                iste architecto voluptas dignissimos fuga optio, id labore molestias
+                                voluptatum perferendis?
+                            </p>
+                            <div>more</div>
+                        </div>
+                    </div>
+                </a>
+                </li>
+                <li class="list_item list_item01">
+                <a href="article01.html">
+                    <div class="article_container">
+                        <div class="article_header flexbox">
+                            <div class="time">
+                                <span class="month">SEP</span>
+                                <span class="date">10</span>
+                                <span class="year">2019</span>
+                            </div>
+                            <div class="article_title_container">
+                                <p class="article_sub_title">#Greening</p>
+                                <h3 class="article_title">
+                                    Goodroom Journal aaaa aaa aaa aa all asdas asdasd s as adgs s dsfds dsfs a a dsdas
+                                    dgfs dsds dfs dfs dfs
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="img img01">
+                        </div>
+                        <div class="text_area">
+                            <p>
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis
+                                maxime tempore nesciunt nemo, quaerat totam repellat quia aliquam magnam
+                                iste architecto voluptas dignissimos fuga optio, id labore molestias
+                                voluptatum perferendis?
+                            </p>
+                            <div>more</div>
+                        </div>
+                    </div>
+                </a>
+                </li>
+            </ul>
+        </div>
+        <aside id="aside" class="flexbox">
+            <div class="ranking">
+                <p class="title">HOT</p>
+                <ul>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail01">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Greening</p>
+                                        <h3 class="title">
+                                            Ai's living that produces the best hospitality in green
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail02">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">On the big veranda</p>
+                                        <h3 class="title">
+                                            Enjoy the view from the living room with a cat
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail03">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Looked like nature was wonderfu</p>
+                                        <h3 class="title">
+                                            Ask the living master's room to find tips to incorporate and enjoy plants.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail04">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Living that feels the forest</p>
+                                        <h3 class="title">
+                                            Mami's living in Tokyo. It was a nice room with lots of flowers and greens in the garden.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail05">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#driftwood</p>
+                                        <h3 class="title">
+                                            A lot of driftwood and dried flowers are displayed and it feels like a picnic in the room! I painted the walls myself to match the atmosphere
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="new">
+                <p class="title">NEW</p>
+                <ul>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail06">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Goodrooms</p>
+                                        <h3 class="title">
+                                            The large, round dining set was inherited from my mother. This is also a fun atmosphere where I paint myself.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail07">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Propose a “camp life”</p>
+                                        <h3 class="title">
+                                            A camp event is organized by three members so that even beginners can easily participate.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail08">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Plant</p>
+                                        <h3 class="title">
+                                            Plants are indispensable for decorations that feel like camping. Rather than buying fresh flowers every time, they sometimes bring greens in their baskets from their rooms.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail09">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">Candles with dry plants</p>
+                                        <h3 class="title">
+                                            Mr. Mami, who goes to the work center of the home center as often as the store clerk makes a mistake. There are lots of fun DIY items in the room.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list_item">
+                        <a href="article01.html">
+                            <div class="thumbnail_container flexbox">
+                                <div class="thumbnail thumbnail10">
+                                </div>
+                                <div class="article_header flexbox">
+                                    <div class="time">
+                                        <span class="month">SEP</span>
+                                        <span class="date">10</span>
+                                        <span class="year">2019</span>
+                                    </div>
+                                    <div class="article_title_container">
+                                        <p class="sub_title">#Greening</p>
+                                        <h3 class="title">
+                                            Combine the Indian evil spirit and dream catcher with plants.
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    <footer>
+        <div id="footer">
+            <div class="social_container flexbox">
+                <div class="fb">
+                    <a href="">
+                        Facebook
+                    </a>
+                </div>
+                <div class="tw">
+                    <a href="">
+                        Twitter
+                    </a>
+                </div>
+                <div class="ig">
+                    <a href="">
+                        Instagram
+                    </a>
+                </div>
+            </div>
+            <p class="copyright">
+                    Copyright © 2019 GreenMaker design workshop All rights reserved.
+                </p>
+        </div>
+    </footer>
+    <div class="run_top">
+        <div class="run_top_arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="17px" height="17px">
+                <path d="M0 13 L9 6 L17 13" stroke="#2D2D2D" stroke-width="1" fill="none" />
+            </svg>
+        </div>
+    </div>
+</body>
+
+</html>

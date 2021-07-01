@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // back to top
+            $(".run_top").click(function () {
+                $("html, body").animate({
+                    scrollTop: $("body").offset().top
+                });
+            });
+
+            // scroll
+            var previousScroll = 0; 
+            $(window).scroll(function() {
+                var scrollTop = document.documentElement.scrollTop;
+                if (scrollTop > 1) {
+                    if (scrollTop > previousScroll) {
+                        $(".run_top").css({
+                            "transform": "scaleY(0)"
+                        });
+                    } else {
+                        $(".run_top").css({
+                            "transform": "scaleY(1)"
+                        });
+                    }
+                }
+
+                if (scrollTop <= 1) {
+                    $(".run_top").css({
+                        "transform": "scaleY(0)"
+                    });
+                }
+
+                previousScroll = scrollTop;
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+         body {
+            background: #FAFAF1;
+        }
+
+        .banner {
+            width: 100%;
+            height: 300px;
+            background: url(./img/service/banner.jpg) center fixed;
+        }
+
+        .content {
+            padding-bottom: 120px;
+        }
+
+        .information {
+            flex: 0 1 33.33%;
+            border: 1px solid blue;
+        }
+
+        .map {
+            flex: 0 1 66.66%;
+            border: 1px solid red;
+        }
+
+        .g_map {
+            width: 100%;
+        }
+
+        .img {
+            flex: 0 1 33.33%;
+            border: 1px solid blue;
+        }
+
+        .contact {
+            flex: 0 1 66.66%;
+            border: 1px solid red;
+        }
+
+        @media screen and (max-width: 992px) {
+        
+        }
+
+        @media screen and (max-width: 576px) {
+
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <div class="header_container">
+            <nav>
+                <ul class="list flexbox">
+                    <div class="item_container01 flexbox">
+                        <li class="separation_line"></li>
+                        <li class="list_item">
+                            <a href="">
+                                <div class="container flexbox">
+                                    <div class="icon icon01"></div>
+                                    <p>HOME</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="separation_line"></li>
+                        <li class="list_item">
+                            <a href="">
+                                <div class="container flexbox">
+                                    <div class="icon icon02"></div>
+                                    <p>LANDSCAPE</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="separation_line"></li>
+                        <li class="list_item">
+                            <a href="">
+                                <div class="container flexbox">
+                                    <div class="icon icon03"></div>
+                                    <p>GREENING</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="separation_line_none"></li>
+                    </div>
+                    <div class="item_container02 flexbox">
+                        <li class="separation_line"></li>
+                        <li class="list_item">
+                            <a href="">
+                                <div class="container flexbox">
+                                    <div class="icon icon04"></div>
+                                    <p>SERVICE</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="separation_line"></li>
+                        <li class="list_item">
+                            <a href="">
+                                <div class="container flexbox">
+                                    <div class="icon icon05"></div>
+                                    <p>BLOG</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="separation_line"></li>
+                        <li class="list_item">
+                            <a href="">
+                                <div class="container flexbox">
+                                    <div class="icon icon06"></div>
+                                    <p>CONTACT</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="separation_line"></li>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="banner"></div>
+    <div class="title_container">
+        <div class="bread_crumb">
+            <p>Home</p>
+            <div class="bread_crumb_arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="13px" height="13px">
+                    <path d="M4 0 L11 7 L4 13" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                </svg>
+            </div>
+            <p>Service</p>
+        </div>
+        <h2 class="title">Service</h2>
+    </div>
+    <div class="content_full">
+        <div class="flexbox">
+            <div class="information">
+            </div>
+            <div class="map">
+                <iframe class="g_map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5741.550218574924!2d121.19077566069662!3d24.967817775210836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346823c1ec904dcb%3A0xcdc129d4455ce456!2z5ZyL56uL5Lit5aSu5aSn5a24!5e0!3m2!1szh-TW!2stw!4v1572451085238!5m2!1szh-TW!2stw"frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+            </div>
+        </div>
+        <div class="flexbox">
+            <div class="img">
+            </div>
+            <div class="contact">
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div id="footer" class="flexbox">
+            <div class="flexbox">
+                <p class="copyright">
+                    Copyright © 2019 GreenMaker design workshop All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <div class="run_top">
+        <div class="run_top_arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="17px" height="17px">
+                <path d="M0 13 L9 6 L17 13" stroke="#2D2D2D" stroke-width="1" fill="none" />
+            </svg>
+        </div>
+        <p>
+            Return To Top
+        </p>
+    </div>
+</body>
+
+</html>
